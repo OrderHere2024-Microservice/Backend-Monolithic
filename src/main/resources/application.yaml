@@ -1,0 +1,38 @@
+server:
+  port: 8080
+  # ssl:
+  #   enabled: ${SSL_ENABLE:false}
+  #   key-store: classpath:orderhere.com.pfx
+  #   key-store-type:
+  #   key-store-password:
+spring:
+  servlet:
+    multipart:
+      max-file-size: 4MB
+      max-request-size: 4MB
+      enabled: true
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_URL:localhost:5432}/postgres
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:orderhere}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    clean-disabled: false
+    clean-on-validation-error: true
+    locations: classpath:db/migration
+    schemas: public
+    enabled: true
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+  application:
+    name: orderhere
