@@ -11,9 +11,9 @@ spring:
         profile:
           name: default
   datasource:
-    # url: jdbc:postgresql://localhost:5432/postgres
-    # username: postgres
-    # password: orderhere
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: orderhere
     driver-class-name: org.postgresql.Driver
   flyway:
     baseline-on-migrate: true
