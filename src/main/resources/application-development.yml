@@ -3,13 +3,14 @@ spring:
     activate:
       on-profile: development
     import: aws-parameterstore:/config/orderhere-monolithic/development/spring/datasource?prefix=spring.datasource.
-  cloud:
-    aws:
-      region:
-        static: ap-southeast-2
-      credentials:
-        profile:
-          name: default
+# There are commented for CI purpose
+#  cloud:
+#    aws:
+#      region:
+#        static: ap-southeast-2
+#      credentials:
+#        profile:
+#          name: default
   datasource:
     # url, username, and password should set by AWS Parameter Store, they are uncommented here for CI pipeline,
     # which haven't setup AWS Credentials for Parameter Store yet
