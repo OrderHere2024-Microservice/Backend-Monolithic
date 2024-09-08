@@ -2,7 +2,7 @@ spring:
   config:
     activate:
       on-profile: development
-    import: aws-parameterstore:/config/orderhere-monolithic/development/spring/datasource?prefix=spring.datasource.
+#    import: aws-parameterstore:/config/orderhere-monolithic/development/spring/datasource?prefix=spring.datasource.
 # There are commented for CI purpose
 #  cloud:
 #    aws:
