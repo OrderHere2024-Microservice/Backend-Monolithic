@@ -13,19 +13,26 @@ public class StripeConfig {
 
     @PostConstruct
     public void init() {
-        SsmClient ssmClient = SsmClient.builder().region(Region.AP_SOUTHEAST_2).build();
 
-        GetParameterRequest parameterRequest = GetParameterRequest.builder().name("/config/orderhere-monolithic/development/stripe/api-key").withDecryption(true).build();
-
-        GetParameterResponse parameterResponse = ssmClient.getParameter(parameterRequest);
-
-        String stripeApiKey = parameterResponse.parameter().value();
-
-        System.out.println("Stripe API Key: " + stripeApiKey);
+        String stripeApiKey = System.getenv("STRIPE_API_KEY");
 
         if (stripeApiKey == null || stripeApiKey.isEmpty()) {
-            Stripe.apiKey = "placeholder";
-            // throw new IllegalArgumentException("Stripe API Key not found in Parameter Store");
+            SsmClient ssmClient = SsmClient.builder()
+                    .region(Region.AP_SOUTHEAST_2)
+                    .build();
+
+            GetParameterRequest parameterRequest = GetParameterRequest.builder()
+                    .name("/config/orderhere-monolithic/development/stripe/api-key")
+                    .withDecryption(true)
+                    .build();
+
+            GetParameterResponse parameterResponse = ssmClient.getParameter(parameterRequest);
+
+            stripeApiKey = parameterResponse.parameter().value();
+        }
+
+        if (stripeApiKey == null || stripeApiKey.isEmpty()) {
+            throw new IllegalArgumentException("Stripe API Key not found in Parameter Store or environment variable");
         }
 
         Stripe.apiKey = stripeApiKey;
