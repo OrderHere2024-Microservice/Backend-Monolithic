@@ -2,10 +2,18 @@ spring:
   config:
     activate:
       on-profile: development
+    import: aws-parameterstore:/config/orderhere-monolithic/development/spring/datasource?prefix=spring.datasource.
+  cloud:
+    aws:
+      region:
+        static: ap-southeast-2
+      credentials:
+        profile:
+          name: default
   datasource:
-    url: jdbc:postgresql://${POSTGRES_URL:localhost:5432/postgres}
-    username: ${POSTGRES_USERNAME:postgres}
-    password: ${POSTGRES_PASSWORD:orderhere}
+    # url: jdbc:postgresql://localhost:5432/postgres
+    # username: postgres
+    # password: orderhere
     driver-class-name: org.postgresql.Driver
   flyway:
     baseline-on-migrate: true
