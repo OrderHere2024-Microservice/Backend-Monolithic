@@ -11,6 +11,8 @@ spring:
         profile:
           name: default
   datasource:
+    # url, username, and password should set by AWS Parameter Store, they are uncommented here for CI pipeline,
+    # which haven't setup AWS Credentials for Parameter Store yet
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: orderhere
