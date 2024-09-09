@@ -8,24 +8,20 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.UUID;
 
 @Service
-@Profile("development")
-public class S3StorageService {
-    /*
-    *  Probably have to re-write this class
-    *
-    * */
+@Profile("!local")
+public class S3StorageService implements StorageService {
+
     private final AmazonS3 s3client;
 
     public S3StorageService(@Value("${aws.accessKey}") String accessKey,
@@ -38,36 +34,38 @@ public class S3StorageService {
                 .build();
     }
 
-    public PutObjectResult uploadFile(String bucketName, String key, File file) {
-        return s3client.putObject(bucketName, key, file);
+    @Override
+    public String uploadFile(MultipartFile file, String bucketName) throws IOException {
+        String originalFileName = file.getOriginalFilename();
+        String uniqueFileName = UUID.randomUUID() + "-" + originalFileName;
+
+        // Convert MultipartFile to File
+        File convertedFile = convertMultipartFileToFile(file);
+        s3client.putObject(bucketName, uniqueFileName, convertedFile);
+
+        // Clean up temporary file after upload
+        convertedFile.delete();
+
+        return s3client.getUrl(bucketName, uniqueFileName).toString();
     }
 
-    public void deleteFile(String bucketName, String key) {
+    @Override
+    public void deleteFile(String bucketName, String fileName) {
         try {
-            s3client.deleteObject(bucketName, key);
+            s3client.deleteObject(bucketName, fileName);
             System.out.println("File deleted successfully.");
         } catch (AmazonServiceException e) {
-            System.err.println("Failed to delete the file from S3. " + e.getErrorMessage());
-            throw e;
+            throw new RuntimeException("Failed to delete file from S3. " + e.getErrorMessage(), e);
         } catch (AmazonClientException e) {
-            System.err.println("Client encountered an error while deleting the file. " + e.getMessage());
-            throw e;
+            throw new RuntimeException("Client encountered an error while deleting the file. " + e.getMessage(), e);
         }
     }
 
-    public File getFile(String bucketName, String key, String destinationPath) throws IOException {
-        S3Object s3Object = s3client.getObject(bucketName, key);
-        InputStream inputStream = s3Object.getObjectContent();
-        File destinationFile = new File(destinationPath);
-        try (FileOutputStream outputStream = new FileOutputStream(destinationFile)) {
-            byte[] readBuffer = new byte[1024];
-            int readLength;
-            while ((readLength = inputStream.read(readBuffer)) > 0) {
-                outputStream.write(readBuffer, 0, readLength);
-            }
-        } catch (IOException e) {
-            throw new IOException("Error occurred while downloading the file from S3", e);
-        }
-        return destinationFile;
+    private File convertMultipartFileToFile(MultipartFile file) throws IOException {
+        File convFile = new File(file.getOriginalFilename());
+        FileOutputStream fos = new FileOutputStream(convFile);
+        fos.write(file.getBytes());
+        fos.close();
+        return convFile;
     }
 }
