@@ -3,14 +3,13 @@ spring:
     activate:
       on-profile: development
     import: aws-parameterstore:/config/orderhere-monolithic/development/spring/datasource?prefix=spring.datasource.
-  # cloud setting can be removed after setting up AWS Role for GitHub Actions
-#  cloud:
-#    aws:
-#      region:
-#        static: ap-southeast-2
-#      credentials:
-#        profile:
-#          name: default
+  cloud:
+    aws:
+      region:
+        static: ap-southeast-2
+      credentials:
+        profile:
+          name: default
   datasource:
     driver-class-name: org.postgresql.Driver
   flyway:

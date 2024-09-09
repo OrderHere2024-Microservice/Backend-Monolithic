@@ -27,7 +27,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-#      TODO: Setup AWS Credentials to access AWS Parameter Store
     - name: Set up Docker
       run: docker compose up -d
     - name: Set STRIPE_API_KEY environment variable
