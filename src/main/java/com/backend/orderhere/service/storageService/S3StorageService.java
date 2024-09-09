@@ -1,4 +1,4 @@
-package com.backend.orderhere.service;
+package com.backend.orderhere.service.storageService;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -11,6 +11,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -19,13 +20,17 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Service
-public class S3Service {
-
+@Profile("development")
+public class S3StorageService {
+    /*
+    *  Probably have to re-write this class
+    *
+    * */
     private final AmazonS3 s3client;
 
-    public S3Service(@Value("${aws.accessKey}") String accessKey,
-                     @Value("${aws.secretKey}") String secretKey,
-                     @Value("${aws.region}") String region) {
+    public S3StorageService(@Value("${aws.accessKey}") String accessKey,
+                            @Value("${aws.secretKey}") String secretKey,
+                            @Value("${aws.region}") String region) {
         AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
         this.s3client = AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))

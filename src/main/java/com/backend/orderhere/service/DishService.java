@@ -1,5 +1,6 @@
 package com.backend.orderhere.service;
 
+import com.backend.orderhere.constants.BucketName;
 import com.backend.orderhere.dto.PagingDto;
 import com.backend.orderhere.dto.dish.DishCreateDto;
 import com.backend.orderhere.dto.dish.DishGetDto;
@@ -9,6 +10,7 @@ import com.backend.orderhere.mapper.DishMapper;
 import com.backend.orderhere.model.Dish;
 import com.backend.orderhere.repository.DishRepository;
 import com.backend.orderhere.service.enums.DishSort;
+import com.backend.orderhere.service.storageService.StorageService;
 import com.backend.orderhere.util.PageableUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +32,7 @@ public class DishService {
   private final DishMapper dishMapper;
 
   @Autowired
-  private MinioService minioService;
+  private StorageService storageService;
 
   public PagingDto<List<DishGetDto>> getDishPageByRestaurantId(Integer restaurantId,
                                                                int page,
@@ -64,11 +66,9 @@ public class DishService {
   @Transactional
   public void createDish(DishCreateDto dishCreateDto) {
     try {
-      String bucketName = "my-bucket";
-      minioService.createBucket(bucketName);
 
       if (dishCreateDto.getImageFile() != null && !dishCreateDto.getImageFile().isEmpty()) {
-        String imageUrl = minioService.uploadFile(dishCreateDto.getImageFile(), bucketName);
+        String imageUrl = storageService.uploadFile(dishCreateDto.getImageFile(), BucketName.LOCAL_BUCKET_NAME);
         dishCreateDto.setImageUrl(imageUrl);
       }
 
@@ -86,11 +86,9 @@ public class DishService {
       Dish existingDish = dishRepository.findById(dishUpdateDto.getDishId())
               .orElseThrow(() -> new ResourceNotFoundException("Dish not found"));
 
-      String bucketName = "my-bucket";
-      minioService.createBucket(bucketName);
-
       if (dishUpdateDto.getImageFile() != null && !dishUpdateDto.getImageFile().isEmpty()) {
-        String imageUrl = minioService.uploadFile(dishUpdateDto.getImageFile(), bucketName);
+        String imageUrl = storageService.uploadFile(dishUpdateDto.getImageFile(), BucketName.LOCAL_BUCKET_NAME);
+        storageService.deleteFile(BucketName.LOCAL_BUCKET_NAME, existingDish.getImageUrl());
         dishUpdateDto.setImageUrl(imageUrl);
       } else {
         dishUpdateDto.setImageUrl(existingDish.getImageUrl());
@@ -108,9 +106,10 @@ public class DishService {
   }
 
   @Transactional
-  public void deleteDish(Integer dishId) {
+  public void deleteDish(Integer dishId) throws Exception {
     Dish dish = dishRepository.findById(dishId)
             .orElseThrow(() -> new ResourceNotFoundException("Dish not found with id: " + dishId));
+    storageService.deleteFile(BucketName.LOCAL_BUCKET_NAME, dish.getImageUrl());
     dishRepository.delete(dish);
   }
 }

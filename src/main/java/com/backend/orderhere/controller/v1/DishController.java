@@ -66,7 +66,7 @@ public class DishController {
     @PreAuthorize("hasRole('sys_admin')")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/1/{dishId}")
-    public void deleteDish(@PathVariable Integer dishId) {
+    public void deleteDish(@PathVariable Integer dishId) throws Exception {
 
 //        linkIngredientRepository.deleteByDishId(dishId);
 

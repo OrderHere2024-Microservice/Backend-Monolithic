@@ -1,8 +1,9 @@
-package com.backend.orderhere.service;
+package com.backend.orderhere.service.storageService;
 
+import com.backend.orderhere.constants.BucketName;
 import io.minio.*;
 import io.minio.errors.MinioException;
-import io.minio.http.Method;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,15 +14,17 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 @Service
-public class MinioService {
+@Profile("local")
+public class MinioStorageService implements StorageService {
 
   private final MinioClient minioClient;
 
-  public MinioService() {
+  public MinioStorageService() throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
     this.minioClient = MinioClient.builder()
             .endpoint("http://127.0.0.1:9000")
             .credentials("minioadmin", "minioadmin")
             .build();
+    createBucket(BucketName.LOCAL_BUCKET_NAME);
   }
 
   public void createBucket(String bucketName) throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
@@ -34,6 +37,7 @@ public class MinioService {
     }
   }
 
+  @Override
   public String uploadFile(MultipartFile file, String bucketName) throws Exception {
     String originalName = file.getOriginalFilename();
     String uniqueFileName = UUID.randomUUID() + "-" + originalName;
@@ -47,4 +51,21 @@ public class MinioService {
       return "http://127.0.0.1:9000/" + bucketName + "/" + uniqueFileName;
     }
   }
+
+  @Override
+  public void deleteFile(String bucketName, String imageUrl) throws Exception {
+    try {
+      String baseUrl = "http://127.0.0.1:9000/" + bucketName + "/";
+      String fileName = imageUrl.replace(baseUrl, "");
+
+      minioClient.removeObject(
+              RemoveObjectArgs.builder()
+                      .bucket(bucketName)
+                      .object(fileName)
+                      .build());
+    } catch (MinioException e) {
+      throw new Exception("Error occurred while trying to delete file: " + imageUrl, e);
+    }
+  }
+
 }
