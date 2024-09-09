@@ -2,10 +2,21 @@ spring:
   config:
     activate:
       on-profile: development
+#    import: aws-parameterstore:/config/orderhere-monolithic/development/spring/datasource?prefix=spring.datasource.
+# There are commented for CI purpose
+#  cloud:
+#    aws:
+#      region:
+#        static: ap-southeast-2
+#      credentials:
+#        profile:
+#          name: default
   datasource:
-    url: jdbc:postgresql://${POSTGRES_URL:localhost:5432/postgres}
-    username: ${POSTGRES_USERNAME:postgres}
-    password: ${POSTGRES_PASSWORD:orderhere}
+    # url, username, and password should set by AWS Parameter Store, they are uncommented here for CI pipeline,
+    # which haven't setup AWS Credentials for Parameter Store yet
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: orderhere
     driver-class-name: org.postgresql.Driver
   flyway:
     baseline-on-migrate: true
