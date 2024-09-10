@@ -2,6 +2,10 @@ spring:
   config:
     activate:
       on-profile: local
+  cloud:
+    aws:
+      region:
+        static: ap-southeast-2
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
