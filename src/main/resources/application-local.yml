@@ -22,3 +22,6 @@ spring:
     url: ${spring.datasource.url}
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
+
+storage:
+  bucketName: my-bucket
