@@ -1,10 +1,10 @@
 package com.backend.orderhere.service.storageService;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
@@ -40,7 +40,7 @@ public class S3StorageService implements StorageService {
                     .contentType("image/jpeg")
                     .build();
 
-            s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromInputStream(inputStream, file.getSize()));
+            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, file.getSize()));
 
             return s3Client.utilities().getUrl(GetUrlRequest.builder().bucket(bucketName).key(uniqueFileName).build()).toString();
         }
