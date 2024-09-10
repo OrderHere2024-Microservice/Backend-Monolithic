@@ -1,6 +1,5 @@
 package com.backend.orderhere.service;
 
-import com.backend.orderhere.constants.BucketName;
 import com.backend.orderhere.dto.user.*;
 import com.backend.orderhere.exception.DataIntegrityException;
 import com.backend.orderhere.exception.ResourceNotFoundException;
@@ -11,10 +10,10 @@ import com.backend.orderhere.model.UserAddress;
 import com.backend.orderhere.model.enums.UserRole;
 import com.backend.orderhere.repository.UserAddressRepository;
 import com.backend.orderhere.repository.UserRepository;
-import com.backend.orderhere.service.storageService.MinioStorageService;
 import com.backend.orderhere.service.storageService.StorageService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,6 +35,9 @@ public class UserService {
   private final TokenService tokenService;
   private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
   private final StorageService storageService;
+
+  @Value("${storage.bucketName}")
+  private String bucketName;
 
   @Autowired
   public UserService(UserRepository userRepository, UserMapper userMapper, TokenService tokenService, UserAddressRepository userAddressRepository, StorageService storageService) {
@@ -212,11 +214,11 @@ public class UserService {
             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
     String oldImageUrl = user.getAvatarUrl();
-    String imageUrl = storageService.uploadFile(userAvatarUpdateDto.getImageFile(), BucketName.LOCAL_BUCKET_NAME);
+    String imageUrl = storageService.uploadFile(userAvatarUpdateDto.getImageFile(), bucketName);
     user.setAvatarUrl(imageUrl);
     User updatedUser = userRepository.save(user);
     if (!oldImageUrl.equals(INIT_AVATAR_URL)) {
-      storageService.deleteFile(BucketName.LOCAL_BUCKET_NAME, oldImageUrl);
+      storageService.deleteFile(bucketName, oldImageUrl);
     }
     return updatedUser.getAvatarUrl();
   }

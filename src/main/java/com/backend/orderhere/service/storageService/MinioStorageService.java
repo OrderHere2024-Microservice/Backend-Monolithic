@@ -1,8 +1,9 @@
 package com.backend.orderhere.service.storageService;
 
-import com.backend.orderhere.constants.BucketName;
 import io.minio.*;
 import io.minio.errors.MinioException;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,12 +20,19 @@ public class MinioStorageService implements StorageService {
 
   private final MinioClient minioClient;
 
+  @Value("${storage.bucketName}")
+  private String bucketName;
+
   public MinioStorageService() throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
     this.minioClient = MinioClient.builder()
             .endpoint("http://127.0.0.1:9000")
             .credentials("minioadmin", "minioadmin")
             .build();
-    createBucket(BucketName.LOCAL_BUCKET_NAME);
+  }
+
+  @PostConstruct
+  public void initialize() throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
+    createBucket(bucketName);
   }
 
   public void createBucket(String bucketName) throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
