@@ -1,5 +1,6 @@
 package com.backend.orderhere.controller.v1;
 
+import com.backend.orderhere.annotations.TrackTime;
 import com.backend.orderhere.dto.PagingDto;
 import com.backend.orderhere.dto.dish.DishCreateDto;
 import com.backend.orderhere.dto.dish.DishGetDto;
@@ -27,6 +28,7 @@ public class DishController {
 
     @GetMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.OK)
+    @TrackTime
     public PagingDto<List<DishGetDto>> getDishes(@PathVariable Integer restaurantId,
                                                  @RequestParam(defaultValue = "1") int page,
                                                  @RequestParam(defaultValue = "0") int size,
