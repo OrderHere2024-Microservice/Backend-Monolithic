@@ -24,7 +24,7 @@ public class S3StorageService implements StorageService {
         this.s3Client = S3Client.builder()
                 .credentialsProvider(ProfileCredentialsProvider.create())
                 .endpointOverride(URI.create("https://s3.amazonaws.com"))
-                .region(Region.AP_SOUTHEAST_2)  // Define your region
+                .region(Region.AP_SOUTHEAST_2)
                 .build();
     }
 
