@@ -53,7 +53,7 @@ public class Restaurant {
   @Column(name = "owner_email", nullable = false)
   private String ownerEmail;
 
-  @Column(name = "owner_crn", nullable = false)
+  @Column(name = "owner_crn")
   private String ownerCrn;
 
   @Column(name = "average_rating")

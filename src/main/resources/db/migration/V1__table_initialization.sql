@@ -56,7 +56,7 @@ CREATE TABLE restaurant
     owner_mobile   varchar(255)             NOT NULL,
     owner_address  varchar(255)             NOT NULL,
     owner_email    varchar(255)             NOT NULL,
-    owner_crn      varchar(255)             NOT NULL,
+    owner_crn      varchar(255),
     average_rating decimal(3, 1),
     created_time   TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_time   TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
