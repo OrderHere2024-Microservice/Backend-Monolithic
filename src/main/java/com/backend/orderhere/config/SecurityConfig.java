@@ -47,7 +47,7 @@ public class SecurityConfig {
               auth.requestMatchers(HttpMethod.POST, "/v1/public/orders").permitAll();
               auth.requestMatchers(StaticConfig.ignoreUrl).permitAll();
               auth.requestMatchers(HttpMethod.GET, StaticConfig.getOnlyUrl).permitAll();
-               auth.anyRequest().authenticated();
+              auth.anyRequest().authenticated();
             });
     return http.build();
   }
