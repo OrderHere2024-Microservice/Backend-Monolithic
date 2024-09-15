@@ -21,11 +21,3 @@ services:
 
 volumes:
   minio_data: {}
-
-#  rabbitmq:
-#    image: 'rabbitmq:latest'
-#    environment:
-#      - 'RABBITMQ_DEFAULT_PASS=orderhere'
-#      - 'RABBITMQ_DEFAULT_USER=rabbitmq'
-#    ports:
-#      - '5672:5672'
