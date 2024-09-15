@@ -19,12 +19,14 @@ public class RestaurantController {
 
   private final RestaurantService restaurantService;
 
+  @Deprecated
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<RestaurantGetDTO> getAllRestaurants() {
     return restaurantService.getAllRestaurants();
   }
 
+  @Deprecated
   @PreAuthorize("hasRole('sys_admin')")
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
@@ -32,12 +34,14 @@ public class RestaurantController {
     return restaurantService.createRestaurant(restaurantCreateDTO);
   }
 
+  @Deprecated
   @GetMapping("/{restaurantId}")
   @ResponseStatus(HttpStatus.OK)
   public RestaurantGetDTO getRestaurantById(@PathVariable Integer restaurantId) {
     return restaurantService.getRestaurantById(restaurantId);
   }
 
+  @Deprecated
   @PreAuthorize("hasRole('sys_admin')")
   @PutMapping("/{restaurantId}")
   @ResponseStatus(HttpStatus.OK)

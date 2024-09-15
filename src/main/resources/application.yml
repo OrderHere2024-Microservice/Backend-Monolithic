@@ -18,3 +18,8 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
+  graphql:
+    path: /graphql
+    graphiql:
+      enabled: true
+      path: /graphiql

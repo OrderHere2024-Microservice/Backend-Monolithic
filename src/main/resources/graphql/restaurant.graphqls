@@ -1,0 +1,51 @@
+type Query {
+    getAllRestaurants: [Restaurant]
+    getRestaurantById(restaurantId: Int!): Restaurant
+}
+
+type Mutation {
+    createRestaurant(restaurantCreateDTO: RestaurantInput!): Restaurant
+    updateRestaurantById(restaurantId: Int!, restaurantUpdateDTO: RestaurantInput!): Restaurant
+}
+
+type Restaurant {
+    restaurantId: Int
+    name: String!
+    description: String!
+    address: String!
+    contactNumber: String!
+    abn: String!
+    ownerName: String
+    ownerMobile: String
+    ownerAddress: String
+    ownerEmail: String!
+    ownerCrn: String
+    openingHours: [OpeningHour]
+}
+
+input RestaurantInput {
+    name: String!
+    description: String!
+    address: String!
+    contactNumber: String!
+    abn: String!
+    ownerName: String
+    ownerMobile: String
+    ownerAddress: String
+    ownerEmail: String!
+    ownerCrn: String
+    openingHours: [OpeningHourInput]
+}
+
+input OpeningHourInput {
+    dayOfWeek: String!
+    openingTime: String!
+    closingTime: String!
+}
+
+type OpeningHour {
+    id: Int
+    dayOfWeek: String!
+    openingTime: String!
+    closingTime: String!
+}
