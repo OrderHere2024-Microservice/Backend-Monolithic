@@ -7,8 +7,8 @@ public class StaticConfig {
             "/swagger-ui/**",
             // -- API
             "/v1/public/users/**",
-            "/graphql",
             "/graphiql",
+            "/graphql",
 
     };
 
