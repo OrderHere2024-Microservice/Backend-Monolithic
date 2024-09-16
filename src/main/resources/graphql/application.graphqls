@@ -1,11 +1,13 @@
 type Query {
     getAllRestaurants: [Restaurant]
     getRestaurantById(restaurantId: Int!): Restaurant
+    getCategories(restaurantId: Int!): [Category]
 }
 
 type Mutation {
     createRestaurant(restaurantCreateDTO: RestaurantInput!): Restaurant
     updateRestaurantById(restaurantId: Int!, restaurantUpdateDTO: RestaurantInput!): Restaurant
+    createCategory(categoryPostDTO: CategoryInput!): Category
 }
 
 type Restaurant {
@@ -48,4 +50,17 @@ type OpeningHour {
     dayOfWeek: String!
     openingTime: String!
     closingTime: String!
+}
+
+type Category {
+    categoryId: Int
+    restaurantId: Int!
+    categoryName: String!
+    createdTime: String
+    updatedTime: String
+}
+
+input CategoryInput {
+    restaurantId: Int!
+    categoryName: String!
 }
