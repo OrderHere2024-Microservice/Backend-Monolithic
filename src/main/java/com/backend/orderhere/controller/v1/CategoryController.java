@@ -19,12 +19,14 @@ import java.util.List;
 public class CategoryController {
   private final CategoryService categoryService;
 
+  @Deprecated
   @GetMapping("/{restaurantId}")
   @ResponseStatus(HttpStatus.OK)
   public List<CategoryGetDto> getCategories(@PathVariable Integer restaurantId) {
     return categoryService.getCategoryByRestaurantId(restaurantId);
   }
 
+  @Deprecated
   @PreAuthorize("hasRole('sys_admin')")
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
