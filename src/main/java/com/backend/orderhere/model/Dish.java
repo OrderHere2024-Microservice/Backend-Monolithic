@@ -66,5 +66,4 @@ public class Dish {
 
   @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<LinkOrderDish> linkOrderDishes;
-  // constructors, getters, setters, and other methods
 }
