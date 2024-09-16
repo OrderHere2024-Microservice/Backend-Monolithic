@@ -31,10 +31,11 @@ public class OrderService {
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
     private final UserService userService;
+    private final PaymentRepository paymentRepository;
 
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, LinkOrderDishRepository linkOrderRepository, DishRepository dishRepository, UserRepository userRepository, RestaurantRepository restaurantRepository, UserService userService) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, LinkOrderDishRepository linkOrderRepository, DishRepository dishRepository, UserRepository userRepository, RestaurantRepository restaurantRepository, UserService userService, PaymentRepository paymentRepository) {
         this.orderRepository = orderRepository;
         this.linkOrderDishRepository = linkOrderRepository;
         this.dishRepository = dishRepository;
@@ -42,6 +43,7 @@ public class OrderService {
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
         this.userService = userService;
+        this.paymentRepository = paymentRepository;
     }
 
     //    public List<OrderGetDTO> getAllOrders() {
@@ -205,6 +207,10 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
         linkOrderDishRepository.deleteByOrderOrderId(orderId);
+        Payment payment = paymentRepository.getByOrderOrderId(orderId);
+        if (payment != null) {
+            paymentRepository.delete(payment);
+        }
         orderRepository.delete(order);
     }
 }

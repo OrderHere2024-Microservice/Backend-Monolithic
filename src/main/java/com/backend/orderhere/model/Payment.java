@@ -3,6 +3,7 @@ package com.backend.orderhere.model;
 import com.backend.orderhere.model.enums.PaymentStatus;
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +24,7 @@ public class Payment {
     @Column(name = "payment_id", nullable = false)
     private Integer paymentId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
