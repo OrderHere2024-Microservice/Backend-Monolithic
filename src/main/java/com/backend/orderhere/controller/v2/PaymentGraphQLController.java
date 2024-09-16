@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -18,6 +19,7 @@ public class PaymentGraphQLController {
 
     private final PaymentService paymentService;
 
+    @PreAuthorize("isAuthenticated()")
     @MutationMapping
     public PaymentCreateDto createPayment(@Argument PaymentPostDto paymentPostDto) {
         try {
@@ -28,6 +30,7 @@ public class PaymentGraphQLController {
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @MutationMapping
     public String getPaymentResult(@Argument PaymentResultDto paymentResultDto) {
         try {
