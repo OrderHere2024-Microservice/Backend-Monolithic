@@ -207,10 +207,8 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
         linkOrderDishRepository.deleteByOrderOrderId(orderId);
-        Payment payment = paymentRepository.getByOrderOrderId(orderId);
-        if (payment != null) {
-            paymentRepository.delete(payment);
-        }
+        List<Payment> payments = paymentRepository.getByOrderOrderId(orderId);
+        paymentRepository.deleteAll(payments);
         orderRepository.delete(order);
     }
 }
