@@ -69,16 +69,18 @@ input CategoryInput {
 
 input PaymentPostDtoInput {
     orderId: Int!
-    amount: Float!
+    amount: BigDecimal!
     currency: String!
 }
 
 input PaymentResultDtoInput {
     paymentId: String!
-    orderId: Int!
+    result: String!
 }
 
 type PaymentCreateDto {
     paymentId: Int!
     clientSecret: String!
 }
+
+scalar BigDecimal

@@ -1,16 +1,12 @@
 package com.backend.orderhere.dto.payment;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class PaymentPostDto {
     private Integer orderId;
     private BigDecimal amount;
