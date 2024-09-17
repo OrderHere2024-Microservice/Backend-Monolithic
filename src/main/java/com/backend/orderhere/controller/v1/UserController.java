@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 
+// This controller is currently not being used in the frontend
+
 @RestController
 @RequestMapping("/v1/public/users")
 public class UserController {
