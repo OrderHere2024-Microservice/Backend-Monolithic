@@ -22,6 +22,7 @@ import java.util.Map;
 public class PaymentController {
     private final PaymentService paymentService;
 
+    @Deprecated
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createPaymentIntent(@RequestBody @Valid PaymentPostDto paymentPostDto) {
@@ -36,6 +37,7 @@ public class PaymentController {
         }
     }
 
+    @Deprecated
     @PutMapping("/result")
     @ResponseStatus(HttpStatus.OK)
     public void getPaymentResult(@RequestBody @Valid PaymentResultDto paymentResultDto) {
