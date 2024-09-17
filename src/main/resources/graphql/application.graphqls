@@ -8,6 +8,8 @@ type Mutation {
     createRestaurant(restaurantCreateDTO: RestaurantInput!): Restaurant
     updateRestaurantById(restaurantId: Int!, restaurantUpdateDTO: RestaurantInput!): Restaurant
     createCategory(categoryPostDTO: CategoryInput!): Category
+    createPayment(paymentPostDto: PaymentPostDtoInput!): PaymentCreateDto!
+    getPaymentResult(paymentResultDto: PaymentResultDtoInput!): String!
 }
 
 type Restaurant {
@@ -64,3 +66,21 @@ input CategoryInput {
     restaurantId: Int!
     categoryName: String!
 }
+
+input PaymentPostDtoInput {
+    orderId: Int!
+    amount: BigDecimal!
+    currency: String!
+}
+
+input PaymentResultDtoInput {
+    paymentId: String!
+    result: String!
+}
+
+type PaymentCreateDto {
+    paymentId: Int!
+    clientSecret: String!
+}
+
+scalar BigDecimal
