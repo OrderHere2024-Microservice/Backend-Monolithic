@@ -1,15 +1,30 @@
+scalar BigDecimal
+
 type Query {
     getAllRestaurants: [Restaurant]
     getRestaurantById(restaurantId: Int!): Restaurant
+
     getCategories(restaurantId: Int!): [Category]
+
+    getAllOrders: [Order]
+    getOrderById(orderId: Int!): Order
+    getOrdersByUserId: [Order]
+    getOrderByOrderStatus(orderStatus: String!): [Order]
+    getOrderByOrderType(orderType: String!): [Order]
 }
 
 type Mutation {
     createRestaurant(restaurantCreateDTO: RestaurantInput!): Restaurant
     updateRestaurantById(restaurantId: Int!, restaurantUpdateDTO: RestaurantInput!): Restaurant
+
     createCategory(categoryPostDTO: CategoryInput!): Category
     createPayment(paymentPostDto: PaymentPostDtoInput!): PaymentCreateDto!
+
     getPaymentResult(paymentResultDto: PaymentResultDtoInput!): String!
+
+    placeOrder(placeOrderInput: PlaceOrderInput!): Int!
+    updateOrderStatus(updateOrderStatusInput: UpdateOrderStatusInput!): Order!
+    deleteOrder(deleteOrderInput: DeleteOrderInput!): String!
 }
 
 type Restaurant {
@@ -83,4 +98,74 @@ type PaymentCreateDto {
     clientSecret: String!
 }
 
-scalar BigDecimal
+type Order {
+    orderId: Int
+    restaurantId: Int
+    userId: Int
+    dishes: [OrderDish]
+    username: String
+    orderStatus: String
+    orderType: String
+    tableNumber: Int
+    pickupTime: String
+    address: String
+    totalPrice: BigDecimal
+    note: String
+    updatedTime: String
+    phone: String
+    numberOfPeople: Int
+}
+
+type OrderDish {
+    dishId: Int!
+    dishName: String!
+    dishQuantity: Int!
+    dishPrice: BigDecimal!
+}
+
+input OrderDishInput {
+    dishId: Int!
+    dishName: String!
+    dishQuantity: Int!
+    dishPrice: BigDecimal!
+}
+
+input PlaceOrderInput {
+    restaurantId: Int!
+    tableNumber: Int
+    orderType: OrderType!
+    orderStatus: OrderStatus!
+    discount: BigDecimal
+    dishes: [OrderDishInput]!
+    totalPrice: BigDecimal!
+    note: String
+    address: String
+    phone: String
+    numberOfPeople: Int
+    pickupTime: String
+}
+
+input UpdateOrderStatusInput {
+    orderId: Int!
+    orderStatus: OrderStatus!
+}
+
+input DeleteOrderInput {
+    orderId: Int!
+}
+
+enum OrderType {
+    dine_in
+    delivery
+    pickup
+}
+
+enum OrderStatus {
+    pending
+    preparing
+    finished
+    cancelled
+    in_transit
+    delivered
+    delayed
+}
