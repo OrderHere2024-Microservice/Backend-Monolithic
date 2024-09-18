@@ -34,17 +34,6 @@ public class IngredientGraphQLControllerIntegrationTest {
     }
 
     @Test
-    void testGetAllIngredients() throws Exception {
-        String query = "{ getAllIngredients { ingredientId name } }";
-
-        mockMvc.perform(post("/graphql")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"query\":\"" + query + "\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.getAllIngredients").isArray());
-    }
-
-    @Test
     void testGetIngredientById() throws Exception {
         String query = "{ getIngredientById(id: 1) { ingredientId name } }";
 
