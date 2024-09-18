@@ -24,11 +24,6 @@ public class IngredientGraphQLController {
     private final LinkIngredientDishService linkIngredientDishService;
 
     @QueryMapping
-    public List<Ingredient> getAllIngredients() {
-        return ingredientService.getAllIngredients();
-    }
-
-    @QueryMapping
     public List<GetIngredientDTO> findIngredientsByDishID(@Argument Integer dishID) {
         return linkIngredientDishService.findGetIngredientDTOByDishID(dishID);
     }

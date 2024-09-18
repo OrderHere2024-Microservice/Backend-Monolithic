@@ -10,7 +10,6 @@ type Query {
     getOrderById(orderId: Int!): Order
     getUserOrders: [Order]
 
-    getAllIngredients: [Ingredient]
     findIngredientsByDishID(dishID: Int!): [GetIngredientDTO]
     getIngredientById(id: Int!): Ingredient
 }
