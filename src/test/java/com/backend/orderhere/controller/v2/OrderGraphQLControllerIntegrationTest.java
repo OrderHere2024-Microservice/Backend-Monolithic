@@ -52,7 +52,7 @@ public class OrderGraphQLControllerIntegrationTest {
 
     @Test
     void testPlaceOrderWithoutAdminRole() throws Exception {
-        String mutation = "mutation { placeOrder(placeOrderInput: { "
+        String mutation = "mutation { placeOrder(placeOrderDTO: { "
                 + "restaurantId: 1, "
                 + "tableNumber: 5, "
                 + "orderType: dine_in, "

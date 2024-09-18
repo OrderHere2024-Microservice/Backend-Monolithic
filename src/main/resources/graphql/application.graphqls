@@ -21,8 +21,8 @@ type Mutation {
     getPaymentResult(paymentResultDto: PaymentResultDtoInput!): String!
 
     placeOrder(placeOrderDTO: PlaceOrderInput!): Int!
-    updateOrderStatus(updateOrderStatusInput: UpdateOrderStatusInput!): Order!
-    deleteOrder(deleteOrderInput: DeleteOrderInput!): String!
+    updateOrderStatus(updateOrderStatusDTO: UpdateOrderStatusInput!): Order!
+    deleteOrder(deleteOrderDTO: DeleteOrderInput!): String!
 }
 
 type Restaurant {
