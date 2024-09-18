@@ -4,7 +4,6 @@ import com.backend.orderhere.dto.order.*;
 import com.backend.orderhere.model.enums.OrderStatus;
 import com.backend.orderhere.model.enums.OrderType;
 import com.backend.orderhere.service.OrderService;
-import graphql.schema.DataFetchingEnvironment;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +63,9 @@ public class OrderGraphQLController {
 
     @PreAuthorize("isAuthenticated()")
     @MutationMapping
-    public Integer placeOrder(@Argument String authorizationHeader, @Argument PlaceOrderDTO placeOrderDTO) {
+    public Integer placeOrder(@Argument PlaceOrderDTO placeOrderDTO) {
+        String authorizationHeader = request.getHeader("Authorization");
+        logger.info("Authorization header for placeOrder: " + authorizationHeader);
         return orderService.PlaceOrder(authorizationHeader, placeOrderDTO).getOrderId();
     }
 
