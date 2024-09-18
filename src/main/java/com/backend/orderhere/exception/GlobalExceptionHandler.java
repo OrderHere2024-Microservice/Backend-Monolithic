@@ -13,6 +13,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.HashMap;
 import java.util.Map;
 
+// We have to modify the exception handling mechanism for GraphQL endpoints.
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
