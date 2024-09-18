@@ -1,5 +1,6 @@
 package com.backend.orderhere.controller.v1;
 
+import com.backend.orderhere.controller.v2.OrderGraphQLController;
 import com.backend.orderhere.dto.ingredient.DeleteIngredientDTO;
 import com.backend.orderhere.dto.order.DeleteOrderDTO;
 import com.backend.orderhere.dto.order.OrderGetDTO;
@@ -11,6 +12,7 @@ import com.backend.orderhere.model.enums.OrderType;
 import com.backend.orderhere.service.OrderService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +22,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/public/orders")
-
+@Deprecated
+@ConditionalOnMissingBean(OrderGraphQLController.class)
 public class OrderController {
     private final OrderService orderService;
 

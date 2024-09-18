@@ -27,7 +27,6 @@ public class PaymentGraphQLController {
     public PaymentCreateDto createPayment(@Argument PaymentPostDto paymentPostDto) {
         try {
             logger.info("Creating payment with paymentPostDto: {}, {}, {}", paymentPostDto.getAmount(), paymentPostDto.getCurrency(), paymentPostDto.getOrderId());
-            System.out.println("Creating payment with paymentPostDto: " + paymentPostDto.getAmount());
             return paymentService.createPayment(paymentPostDto);
         } catch (StripeException e) {
             log.error("Stripe error occurred: {}", e.getMessage());

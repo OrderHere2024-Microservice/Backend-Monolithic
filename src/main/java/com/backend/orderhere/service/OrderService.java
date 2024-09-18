@@ -171,7 +171,6 @@ public class OrderService {
     }
 
     public Order PlaceOrder(String token, PlaceOrderDTO placeOrderDTO) {
-//        User user = userRepository.findByUserId(placeOrderDTO.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Integer userId = (token != null) ? JwtUtil.getUserIdFromToken(token) : null;
         User user;
         if (userId == null) {
