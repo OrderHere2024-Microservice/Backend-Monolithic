@@ -76,7 +76,7 @@ public class OrderGraphQLControllerIntegrationTest {
 
     @Test
     void testUpdateOrderStatusWithoutAdminRole() throws Exception {
-        String mutation = "mutation { updateOrderStatus(updateOrderStatusInput: { "
+        String mutation = "mutation { updateOrderStatus(updateOrderStatusDTO: { "
                 + "orderId: 1, "
                 + "orderStatus: finished }) { orderId orderStatus } }";
 
@@ -89,7 +89,7 @@ public class OrderGraphQLControllerIntegrationTest {
 
     @Test
     void testDeleteOrderWithoutAdminRole() throws Exception {
-        String mutation = "mutation { deleteOrder(deleteOrderInput: { orderId: 1 }) }";
+        String mutation = "mutation { deleteOrder(deleteOrderDTO: { orderId: 1 }) }";
 
         mockMvc.perform(post("/graphql")
                         .contentType(MediaType.APPLICATION_JSON)
