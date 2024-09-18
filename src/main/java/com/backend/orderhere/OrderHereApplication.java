@@ -11,21 +11,22 @@ import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 public class OrderHereApplication {
-  private static final Logger logger = LoggerFactory.getLogger(OrderHereApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(OrderHereApplication.class);
 
-  public static void main(String[] args) {
-    SpringApplication.run(OrderHereApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(OrderHereApplication.class, args);
+    }
 
-  @Bean
-  public ApplicationListener<ApplicationReadyEvent> onApplicationReadyEventListener(Environment env) {
-    return event -> {
-      String contextPath = env.getProperty("server.servlet.context-path", "");
-      String host = "localhost";
-      int port = env.getProperty("server.port", Integer.class, 8080);
-      String swaggerUrl = String.format("http://%s:%d%s/swagger-ui/index.html", host, port, contextPath);
-      logger.info("Swagger UI URL: {}", swaggerUrl);
-    };
-  }
-
+    @Bean
+    public ApplicationListener<ApplicationReadyEvent> onApplicationReadyEventListener(Environment env) {
+        return event -> {
+            String contextPath = env.getProperty("server.servlet.context-path", "");
+            String host = "localhost";
+            int port = env.getProperty("server.port", Integer.class, 8080);
+            String swaggerUrl = String.format("http://%s:%d%s/swagger-ui/index.html", host, port, contextPath);
+            String graphiQLUrl = String.format("http://%s:%d%s/graphiql", host, port, contextPath);
+            logger.info("Swagger UI URL: {}", swaggerUrl);
+            logger.info("GraphiQL URL: {}", graphiQLUrl);
+        };
+    }
 }

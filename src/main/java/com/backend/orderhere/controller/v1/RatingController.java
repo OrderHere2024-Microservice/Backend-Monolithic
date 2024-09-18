@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 // This controller is currently not being used in the frontend
-
-@RestController
+// @RestController
 @RequestMapping("/v1/public/rating")
 @RequiredArgsConstructor
 @Validated
