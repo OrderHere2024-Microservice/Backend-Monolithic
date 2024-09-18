@@ -43,7 +43,7 @@ public class OrderGraphQLController {
 
     @PreAuthorize("isAuthenticated()")
     @QueryMapping
-    public List<OrderGetDTO> getOrdersByUserId() {
+    public List<OrderGetDTO> getUserOrders() {
         String authorizationHeader = request.getHeader("Authorization");
         logger.info("Authorization header for getOrdersByUserId: " + authorizationHeader);
         return orderService.getOrderByUserId(authorizationHeader);

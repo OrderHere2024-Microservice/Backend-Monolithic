@@ -8,7 +8,7 @@ type Query {
 
     getAllOrders: [Order]
     getOrderById(orderId: Int!): Order
-    getOrdersByUserId: [Order]
+    getUserOrders: [Order]
     getOrderByOrderStatus(orderStatus: String!): [Order]
     getOrderByOrderType(orderType: String!): [Order]
 }
