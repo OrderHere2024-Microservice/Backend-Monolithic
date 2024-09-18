@@ -50,18 +50,6 @@ public class OrderGraphQLController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @QueryMapping
-    public List<OrderGetDTO> getOrderByOrderStatus(@Argument String orderStatus) {
-        return orderService.getOrderByOrderStatus(OrderStatus.valueOf(orderStatus));
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @QueryMapping
-    public List<OrderGetDTO> getOrderByOrderType(@Argument String orderType) {
-        return orderService.getOrderByOrderType(OrderType.valueOf(orderType));
-    }
-
-    @PreAuthorize("isAuthenticated()")
     @MutationMapping
     public Integer placeOrder(@Argument PlaceOrderDTO placeOrderDTO) {
         String authorizationHeader = request.getHeader("Authorization");

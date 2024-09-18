@@ -9,8 +9,6 @@ type Query {
     getAllOrders: [Order]
     getOrderById(orderId: Int!): Order
     getUserOrders: [Order]
-    getOrderByOrderStatus(orderStatus: String!): [Order]
-    getOrderByOrderType(orderType: String!): [Order]
 }
 
 type Mutation {
