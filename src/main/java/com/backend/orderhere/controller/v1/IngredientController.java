@@ -1,5 +1,6 @@
 package com.backend.orderhere.controller.v1;
 
+import com.backend.orderhere.controller.v2.IngredientGraphQLController;
 import com.backend.orderhere.dto.ingredient.DeleteIngredientDTO;
 import com.backend.orderhere.dto.ingredient.GetIngredientDTO;
 import com.backend.orderhere.dto.ingredient.PostIngredientDTO;
@@ -11,6 +12,7 @@ import com.backend.orderhere.service.LinkIngredientDishService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/public/ingredients")
+@Deprecated
+@ConditionalOnMissingBean(IngredientGraphQLController.class)
 public class IngredientController {
 
     private final IngredientService ingredientService;
