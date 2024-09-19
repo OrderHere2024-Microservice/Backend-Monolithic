@@ -44,7 +44,9 @@ public class OrderGraphQLControllerIntegrationTest {
 
         mockMvc.perform(post("/graphql")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdGV2ZW5AZW1haWwuY29tIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfY3VzdG9tZXIifV0sInVzZXJJZCI6MywiYXZhdGFyVVJMIjoiU09NRV9ERUZBVUxUX1VSTCIsInVzZXJOYW1lIjoiU3RldmVuIEd1byIsImlhdCI6MTcyNjU3NzkzOSwiZXhwIjoxNzI2NjY0MzM5fQ.VvonD4HJZ0Qoz6vLuMltPb7jV7eP-vIqel20UlPCVqo")
+                        // we need to generate a recent JWT for the test that we can test further: e.g. response data...
+                        // static JWT will expired over time
+                        // .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdGV2ZW5AZW1haWwuY29tIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfY3VzdG9tZXIifV0sInVzZXJJZCI6MywiYXZhdGFyVVJMIjoiU09NRV9ERUZBVUxUX1VSTCIsInVzZXJOYW1lIjoiU3RldmVuIEd1byIsImlhdCI6MTcyNjU3NzkzOSwiZXhwIjoxNzI2NjY0MzM5fQ.VvonD4HJZ0Qoz6vLuMltPb7jV7eP-vIqel20UlPCVqo")
                         .content("{\"query\":\"" + query + "\"}"))
                 .andExpect(status().isOk());
     }

@@ -9,6 +9,9 @@ type Query {
     getAllOrders: [Order]
     getOrderById(orderId: Int!): Order
     getUserOrders: [Order]
+
+    findIngredientsByDishID(dishID: Int!): [GetIngredientDTO]
+    getIngredientById(id: Int!): Ingredient
 }
 
 type Mutation {
@@ -23,6 +26,10 @@ type Mutation {
     placeOrder(placeOrderDTO: PlaceOrderInput!): Int!
     updateOrderStatus(updateOrderStatusDTO: UpdateOrderStatusInput!): Order!
     deleteOrder(deleteOrderDTO: DeleteOrderInput!): String!
+
+    createLinkIngredientDish(postIngredientDTO: PostIngredientInput!): Int!
+    deleteIngredientLink(deleteIngredientDTO: DeleteIngredientInput!): String!
+    updateIngredient(updateIngredientDTO: UpdateIngredientInput!): Ingredient!
 }
 
 type Restaurant {
@@ -166,4 +173,34 @@ enum OrderStatus {
     in_transit
     delivered
     delayed
+}
+
+type Ingredient {
+    ingredientId: Int!
+    name: String!
+}
+
+type GetIngredientDTO {
+    linkIngredientDishId: Int!
+    dishId: Int!
+    ingredientId: Int!
+    quantityValue: BigDecimal!
+    quantityUnit: String!
+}
+
+input PostIngredientInput {
+    dishId: Int!
+    name: String!
+    unit: String!
+    quantityValue: BigDecimal!
+}
+
+input UpdateIngredientInput {
+    ingredientId: Int!
+    name: String!
+}
+
+input DeleteIngredientInput {
+    dishId: Int!
+    ingredientId: Int!
 }
