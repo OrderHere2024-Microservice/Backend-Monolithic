@@ -70,8 +70,6 @@ public class DishController {
     @DeleteMapping("/1/{dishId}")
     public void deleteDish(@PathVariable Integer dishId) throws Exception {
 
-//        linkIngredientRepository.deleteByDishId(dishId);
-
         dishService.deleteDish(dishId);
     }
 }

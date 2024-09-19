@@ -4,6 +4,7 @@ import com.backend.orderhere.dto.restaurant.RestaurantCreateDTO;
 import com.backend.orderhere.dto.restaurant.RestaurantGetDTO;
 import com.backend.orderhere.dto.restaurant.RestaurantUpdateDTO;
 import com.backend.orderhere.service.RestaurantService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -31,13 +32,13 @@ public class RestaurantGraphQLController {
 
     @PreAuthorize("hasRole('sys_admin')")
     @MutationMapping
-    public RestaurantGetDTO createRestaurant(@Argument RestaurantCreateDTO restaurantCreateDTO) {
+    public RestaurantGetDTO createRestaurant(@Valid @Argument RestaurantCreateDTO restaurantCreateDTO) {
         return restaurantService.createRestaurant(restaurantCreateDTO);
     }
 
     @PreAuthorize("hasRole('sys_admin')")
     @MutationMapping
-    public RestaurantGetDTO updateRestaurantById(@Argument Integer restaurantId, @Argument RestaurantUpdateDTO restaurantUpdateDTO) {
+    public RestaurantGetDTO updateRestaurantById(@Argument Integer restaurantId, @Valid @Argument RestaurantUpdateDTO restaurantUpdateDTO) {
         return restaurantService.updateRestaurantById(restaurantId, restaurantUpdateDTO);
     }
 }
