@@ -29,6 +29,7 @@ public class DishController {
     @GetMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.OK)
     @TrackTime
+    @Deprecated
     public PagingDto<List<DishGetDto>> getDishes(@PathVariable Integer restaurantId,
                                                  @RequestParam(defaultValue = "1") int page,
                                                  @RequestParam(defaultValue = "0") int size,
@@ -43,6 +44,7 @@ public class DishController {
         );
     }
 
+    // Not used
     @GetMapping("/{restaurantId}/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
     public List<DishGetDto> getDishesByCategory(@PathVariable Integer restaurantId,
@@ -50,6 +52,7 @@ public class DishController {
         return dishService.getDishByCategory(restaurantId, categoryId);
     }
 
+    // still in use, will deprecate this when solving gql upload issue
     @PreAuthorize("hasRole('sys_admin')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -57,6 +60,7 @@ public class DishController {
         dishService.createDish(dishCreateDto);
     }
 
+    // still in use, will deprecate this when solving gql upload issue
     @PreAuthorize("hasRole('sys_admin')")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -68,9 +72,8 @@ public class DishController {
     @PreAuthorize("hasRole('sys_admin')")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/1/{dishId}")
+    @Deprecated
     public void deleteDish(@PathVariable Integer dishId) throws Exception {
-
-//        linkIngredientRepository.deleteByDishId(dishId);
 
         dishService.deleteDish(dishId);
     }

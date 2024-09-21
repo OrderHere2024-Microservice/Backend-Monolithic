@@ -5,6 +5,7 @@ import com.backend.orderhere.dto.payment.PaymentPostDto;
 import com.backend.orderhere.dto.payment.PaymentResultDto;
 import com.backend.orderhere.service.PaymentService;
 import com.stripe.exception.StripeException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class PaymentGraphQLController {
 
     @PreAuthorize("isAuthenticated()")
     @MutationMapping
-    public PaymentCreateDto createPayment(@Argument PaymentPostDto paymentPostDto) {
+    public PaymentCreateDto createPayment(@Valid @Argument PaymentPostDto paymentPostDto) {
         try {
             logger.info("Creating payment with paymentPostDto: {}, {}, {}", paymentPostDto.getAmount(), paymentPostDto.getCurrency(), paymentPostDto.getOrderId());
             return paymentService.createPayment(paymentPostDto);
@@ -36,7 +37,7 @@ public class PaymentGraphQLController {
 
     @PreAuthorize("isAuthenticated()")
     @MutationMapping
-    public String getPaymentResult(@Argument PaymentResultDto paymentResultDto) {
+    public String getPaymentResult(@Valid @Argument PaymentResultDto paymentResultDto) {
         try {
             paymentService.getPaymentResult(paymentResultDto);
             return "Payment result processed successfully";

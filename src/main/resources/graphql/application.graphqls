@@ -1,4 +1,6 @@
 scalar BigDecimal
+scalar Upload
+scalar Long
 
 type Query {
     getAllRestaurants: [Restaurant]
@@ -12,6 +14,9 @@ type Query {
 
     findIngredientsByDishID(dishID: Int!): [GetIngredientDTO]
     getIngredientById(id: Int!): Ingredient
+
+    getDishes(restaurantId: Int!, page: Int = 1, size: Int = 10, sort: String = "category", order: String = "asc"): DishPage
+    getDishesByCategory(restaurantId: Int!, categoryId: Int!): [DishGetDto]
 }
 
 type Mutation {
@@ -30,6 +35,10 @@ type Mutation {
     createLinkIngredientDish(postIngredientDTO: PostIngredientInput!): Int!
     deleteIngredientLink(deleteIngredientDTO: DeleteIngredientInput!): String!
     updateIngredient(updateIngredientDTO: UpdateIngredientInput!): Ingredient!
+
+    createDish(dishCreateDto: DishCreateInput!): Boolean
+    updateDish(dishUpdateDto: DishUpdateInput!): DishGetDto
+    deleteDish(dishId: Int!): Boolean
 }
 
 type Restaurant {
@@ -203,4 +212,46 @@ input UpdateIngredientInput {
 input DeleteIngredientInput {
     dishId: Int!
     ingredientId: Int!
+}
+
+type DishPage {
+    data: [DishGetDto]
+    totalItems: Long
+    totalPages: Int
+    currentPage: Int
+}
+
+type DishGetDto {
+    dishId: Int
+    dishName: String
+    description: String
+    price: BigDecimal
+    imageUrl: String
+    rating: BigDecimal
+    restaurantId: Int
+    availability: Boolean
+    categoryId: Int
+    categoryName: String
+}
+
+input DishCreateInput {
+    dishName: String!
+    description: String!
+    price: BigDecimal!
+    imageUrl: String
+    imageFile: Upload
+    restaurantId: Int!
+    availability: Boolean!
+    categoryId: Int!
+}
+
+input DishUpdateInput {
+    dishId: Int!
+    dishName: String!
+    description: String!
+    price: BigDecimal!
+    imageUrl: String
+    imageFile: Upload
+    restaurantId: Int!
+    availability: Boolean!
 }

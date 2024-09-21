@@ -1,5 +1,6 @@
 package com.backend.orderhere.config;
 
+import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.scalars.ExtendedScalars;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,9 +8,11 @@ import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 
 
 @Configuration
-public class GraphQlConfig {
+public class GraphQLConfig {
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
-        return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.GraphQLBigDecimal);
+        return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.GraphQLBigDecimal)
+                .scalar(ExtendedScalars.GraphQLLong)
+                .scalar(ApolloScalars.Upload);
     }
 }
