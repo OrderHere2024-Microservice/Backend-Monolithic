@@ -16,6 +16,8 @@ Once the application is running, you can access the API documentation at the fol
 
 [http://localhost:8080/swagger-ui/index.html#/](http://localhost:8080/swagger-ui/index.html#/)
 
+[http://localhost:8080/graphiql#/](http://localhost:8080/graphiql#/)
+
 
 
 
