@@ -1,6 +1,7 @@
 package com.backend.orderhere.controller.v1;
 
 import com.backend.orderhere.annotations.TrackTime;
+import com.backend.orderhere.controller.v2.DishGraphQLController;
 import com.backend.orderhere.dto.PagingDto;
 import com.backend.orderhere.dto.dish.DishCreateDto;
 import com.backend.orderhere.dto.dish.DishGetDto;
@@ -9,6 +10,7 @@ import com.backend.orderhere.service.DishService;
 import com.backend.orderhere.service.enums.DishSort;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +32,7 @@ public class DishController {
     @ResponseStatus(HttpStatus.OK)
     @TrackTime
     @Deprecated
+    @ConditionalOnMissingBean(DishGraphQLController.class)
     public PagingDto<List<DishGetDto>> getDishes(@PathVariable Integer restaurantId,
                                                  @RequestParam(defaultValue = "1") int page,
                                                  @RequestParam(defaultValue = "0") int size,
@@ -47,6 +50,8 @@ public class DishController {
     // Not used
     @GetMapping("/{restaurantId}/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
+    @Deprecated
+    @ConditionalOnMissingBean(DishGraphQLController.class)
     public List<DishGetDto> getDishesByCategory(@PathVariable Integer restaurantId,
                                                 @PathVariable Integer categoryId) {
         return dishService.getDishByCategory(restaurantId, categoryId);
@@ -73,6 +78,7 @@ public class DishController {
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/1/{dishId}")
     @Deprecated
+    @ConditionalOnMissingBean(DishGraphQLController.class)
     public void deleteDish(@PathVariable Integer dishId) throws Exception {
 
         dishService.deleteDish(dishId);
