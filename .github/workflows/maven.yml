@@ -28,7 +28,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Set up Docker
-      run: docker compose up -d
+      run: docker compose -f docker-compose.local.yaml up -d
     - name: Set STRIPE_API_KEY environment variable
       run: echo "STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}" >> $GITHUB_ENV
     - name: Build with Maven
