@@ -18,20 +18,25 @@ import java.util.UUID;
 @Profile("local")
 public class MinioStorageService implements StorageService {
 
-  private final MinioClient minioClient;
+  private MinioClient minioClient;
 
   @Value("${storage.bucketName}")
   private String bucketName;
 
-  public MinioStorageService() throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
-    this.minioClient = MinioClient.builder()
-            .endpoint("http://127.0.0.1:9000")
-            .credentials("minioadmin", "minioadmin")
-            .build();
+  @Value("${storage.url}")
+  private String minioUrl;
+
+  public MinioStorageService() {
   }
 
   @PostConstruct
   public void initialize() throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
+
+    this.minioClient = MinioClient.builder()
+            .endpoint(minioUrl)
+            .credentials("minioadmin", "minioadmin")
+            .build();
+
     createBucket(bucketName);
   }
 
@@ -56,14 +61,14 @@ public class MinioStorageService implements StorageService {
                       .contentType("image/jpeg")
                       .build());
 
-      return "http://127.0.0.1:9000/" + bucketName + "/" + uniqueFileName;
+      return minioUrl + "/" + bucketName + "/" + uniqueFileName;
     }
   }
 
   @Override
   public void deleteFile(String bucketName, String imageUrl) throws Exception {
     try {
-      String baseUrl = "http://127.0.0.1:9000/" + bucketName + "/";
+      String baseUrl = minioUrl + "/" + bucketName + "/";
       String fileName = imageUrl.replace(baseUrl, "");
 
       minioClient.removeObject(
