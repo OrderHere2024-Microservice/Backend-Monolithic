@@ -61,14 +61,14 @@ public class MinioStorageService implements StorageService {
                       .contentType("image/jpeg")
                       .build());
 
-      return minioUrl + "/" + bucketName + "/" + uniqueFileName;
+      return "http://127.0.0.1:9000" + "/" + bucketName + "/" + uniqueFileName;
     }
   }
 
   @Override
   public void deleteFile(String bucketName, String imageUrl) throws Exception {
     try {
-      String baseUrl = minioUrl + "/" + bucketName + "/";
+      String baseUrl = "http://127.0.0.1:9000" + "/" + bucketName + "/";
       String fileName = imageUrl.replace(baseUrl, "");
 
       minioClient.removeObject(
