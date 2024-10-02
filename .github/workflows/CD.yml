@@ -1,5 +1,9 @@
 name: CD
 
+permissions:
+  contents: read
+  id-token: write
+
 on:
   push:
     branches:
@@ -15,9 +19,6 @@ jobs:
 
   CD:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     needs: CI
     environment: CD
     steps:
@@ -26,8 +27,8 @@ jobs:
     - name: configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        audience: ${{ secrets.AUDIENCE }}
-        aws-region: ${{ secrets.AWS_REGION }}
+        audience: sts.amazonaws.com
+        aws-region: ap-southeast-2
         role-to-assume: ${{ secrets.AWS_ROLE }}
     - name: Login to Amazon ECR
       id: login-ecr
