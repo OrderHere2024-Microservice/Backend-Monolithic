@@ -1,9 +1,5 @@
 name: CD
 
-permissions:
-  contents: read
-  id-token: write
-
 on:
   push:
     branches:
@@ -19,6 +15,9 @@ jobs:
 
   CD:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     needs: CI
     environment: CD
     steps:
