@@ -7,8 +7,8 @@ permissions:
 on:
   push:
     branches:
-        - main
-        - dev
+      - main
+      - dev
   workflow_dispatch:
 
 jobs:
@@ -22,14 +22,36 @@ jobs:
     needs: CI
     environment: CD
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        audience: ${{ secrets.AUDIENCE }}
-        aws-region: ${{ secrets.AWS_REGION }}
-        role-to-assume: ${{ secrets.AWS_ROLE }}
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: ${{ secrets.AUDIENCE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set dynamic image tag
+        id: image_tag
+        run: |
+          TAG=$(echo "${{ github.ref }}" | sed 's|refs/heads/||' | tr '/' '-')
+          IMAGE_TAG="${TAG}-${{ github.sha }}"
+          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+
+      - name: Build, tag, and push Docker image to Amazon ECR
+        run: |
+          ECR_REPO=${{ secrets.ECR_REPOSITORY }}
+          IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${ECR_REPO}:${{ env.IMAGE_TAG }}
+          
+          docker build -t ${IMAGE_URI} .
+          
+          docker push ${IMAGE_URI}
+
+      - name: Output image URI
+        run: |
+          echo "Docker image pushed to: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
