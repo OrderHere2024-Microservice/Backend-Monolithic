@@ -13,8 +13,10 @@ on:
 
 jobs:
   CI:
-    environment: CI
     uses: ./.github/workflows/CI.yml
+    with:
+      stripe_api_key: ${{ secrets.STRIPE_API_KEY }}
+
 
 #  CD:
 #    runs-on: ubuntu-latest

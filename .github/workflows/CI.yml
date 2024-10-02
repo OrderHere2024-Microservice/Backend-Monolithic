@@ -14,6 +14,10 @@ on:
   pull_request:
     branches: [ "dev" ]
   workflow_call:
+    inputs:
+      stripe_api_key:
+        required: true
+        type: string
   workflow_dispatch:
 
 jobs:
