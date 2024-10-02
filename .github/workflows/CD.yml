@@ -13,7 +13,9 @@ on:
 
 jobs:
   CI:
+    environment: CI
     uses: ./.github/workflows/CI.yml
+
 #  CD:
 #    runs-on: ubuntu-latest
 #    needs: CI
