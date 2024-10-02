@@ -1,8 +1,8 @@
 name: CD
 
-#permissions:
-#  contents: read
-#  id-token: write
+permissions:
+  contents: read
+  id-token: write
 
 on:
   push:
@@ -18,19 +18,19 @@ jobs:
       stripe_api_key: ${{ secrets.STRIPE_API_KEY }}
 
 
-#  CD:
-#    runs-on: ubuntu-latest
-#    needs: CI
-#    environment: CD
-#    steps:
-#    - name: Checkout code
-#      uses: actions/checkout@v4
-#    - name: configure AWS credentials
-#      uses: aws-actions/configure-aws-credentials@v4
-#      with:
-#        audience: ${{ secrets.AUDIENCE }}
-#        aws-region: ${{ secrets.AWS_REGION }}
-#        role-to-assume: ${{ secrets.AWS_ROLE }}
-#    - name: Login to Amazon ECR
-#      id: login-ecr
-#      uses: aws-actions/amazon-ecr-login@v2
+  CD:
+    runs-on: ubuntu-latest
+    needs: CI
+    environment: CD
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        audience: ${{ secrets.AUDIENCE }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        role-to-assume: ${{ secrets.AWS_ROLE }}
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
