@@ -1,0 +1,28 @@
+spring:
+  config:
+    activate:
+      on-profile: production
+    import:
+      - aws-parameterstore:/config/orderhere-monolithic/production/spring/datasource?prefix=spring.datasource.
+      - aws-parameterstore:/config/orderhere-monolithic/production/spring/storage?prefix=storage
+      - aws-secretsmanager:rds!db-7ed282e1-e690-4835-a2ad-b154dd513b03?prefix=spring.datasource.
+  cloud:
+    aws:
+      region:
+        static: ap-southeast-2
+      credentials:
+        profile:
+          name: default
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    clean-disabled: false
+    clean-on-validation-error: true
+    locations: classpath:db/migration
+    schemas: public
+    enabled: true
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
