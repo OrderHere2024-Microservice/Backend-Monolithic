@@ -1,11 +1,11 @@
 spring:
   config:
     activate:
-      on-profile: development
+      on-profile: production
     import:
-      - aws-parameterstore:/config/orderhere-monolithic/development/spring/datasource?prefix=spring.datasource.
-      - aws-parameterstore:/config/orderhere-monolithic/development/spring/storage?prefix=storage
-      - aws-secretsmanager:rds!db-fd18de7b-4dbe-4e38-b479-7176428845ed?prefix=spring.datasource.
+      - aws-parameterstore:/config/orderhere-monolithic/production/spring/datasource?prefix=spring.datasource.
+      - aws-parameterstore:/config/orderhere-monolithic/production/spring/storage?prefix=storage
+      - aws-secretsmanager:rds!db-7ed282e1-e690-4835-a2ad-b154dd513b03?prefix=spring.datasource.
   cloud:
     aws:
       region:
