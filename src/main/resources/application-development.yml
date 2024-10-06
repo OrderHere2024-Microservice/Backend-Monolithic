@@ -2,7 +2,10 @@ spring:
   config:
     activate:
       on-profile: development
-    import: aws-parameterstore:/config/orderhere-monolithic/development/spring/datasource?prefix=spring.datasource.
+    import:
+      - aws-parameterstore:/config/orderhere-monolithic/development/spring/datasource?prefix=spring.datasource.
+      - aws-parameterstore:/config/orderhere-monolithic/development/spring/storage?prefix=storage
+      - aws-secretsmanager:rds!db-fd18de7b-4dbe-4e38-b479-7176428845ed?prefix=spring.datasource.
   cloud:
     aws:
       region:
@@ -23,6 +26,3 @@ spring:
     url: ${spring.datasource.url}
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
-
-storage:
-  bucketName: orderhere2024-development
