@@ -23,3 +23,31 @@ spring:
     graphiql:
       enabled: true
       path: /graphiql
+resilience4j:
+  retry:
+    instances:
+      default:
+        maxAttempts: 2
+        waitDuration: 500ms
+  circuitbreaker:
+    instances:
+      default:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+  ratelimiter:
+    instances:
+      default:
+        limitForPeriod: 50
+        timeoutDuration: 5s
+        limit-refresh-period:
+          nanos: 10000
+  bulkhead:
+    instances:
+      default:
+        maxConcurrentCalls: 100
+        maxWaitDuration: 300ms
