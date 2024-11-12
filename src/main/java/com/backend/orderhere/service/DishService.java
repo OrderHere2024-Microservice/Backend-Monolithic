@@ -1,5 +1,6 @@
 package com.backend.orderhere.service;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.backend.orderhere.dto.PagingDto;
 import com.backend.orderhere.dto.dish.DishCreateDto;
 import com.backend.orderhere.dto.dish.DishGetDto;
@@ -27,6 +28,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
+@XRayEnabled
 public class DishService {
   private final DishRepository dishRepository;
   private final DishMapper dishMapper;

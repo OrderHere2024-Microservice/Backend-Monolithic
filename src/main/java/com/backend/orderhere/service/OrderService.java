@@ -1,5 +1,6 @@
 package com.backend.orderhere.service;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.backend.orderhere.dto.OrderDishDTO;
 import com.backend.orderhere.dto.order.DeleteOrderDTO;
 import com.backend.orderhere.dto.order.OrderGetDTO;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@XRayEnabled
 public class OrderService {
 
     private final OrderRepository orderRepository;
