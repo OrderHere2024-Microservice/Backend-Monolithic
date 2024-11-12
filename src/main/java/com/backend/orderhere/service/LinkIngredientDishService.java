@@ -1,5 +1,6 @@
 package com.backend.orderhere.service;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.backend.orderhere.dto.ingredient.DeleteIngredientDTO;
 import com.backend.orderhere.dto.ingredient.GetIngredientDTO;
 import com.backend.orderhere.dto.ingredient.PostIngredientDTO;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@XRayEnabled
 public class LinkIngredientDishService {
     @Autowired
     private LinkIngredientDishRepository linkIngredientDishRepository;
