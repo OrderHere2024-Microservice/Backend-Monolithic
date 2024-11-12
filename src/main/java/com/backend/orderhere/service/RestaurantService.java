@@ -1,5 +1,6 @@
 package com.backend.orderhere.service;
 
+import com.amazonaws.xray.spring.aop.XRayEnabled;
 import com.backend.orderhere.dto.restaurant.RestaurantCreateDTO;
 import com.backend.orderhere.dto.restaurant.RestaurantGetDTO;
 import com.backend.orderhere.dto.restaurant.RestaurantUpdateDTO;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@XRayEnabled
 @RequiredArgsConstructor
 public class RestaurantService {
 
