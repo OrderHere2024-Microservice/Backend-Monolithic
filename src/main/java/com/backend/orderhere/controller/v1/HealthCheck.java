@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+// Health check endpoint for the application
 @RestController
 @RequestMapping("/health-check")
 @Retry(name = "healthCheck")
