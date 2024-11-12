@@ -29,25 +29,30 @@ resilience4j:
       default:
         maxAttempts: 2
         waitDuration: 500ms
+      healthCheck:
+        maxAttempts: 10
+        waitDuration: 100ms
   circuitbreaker:
     instances:
       default:
-        slidingWindowType: COUNT_BASED
         slidingWindowSize: 10
         failureRateThreshold: 50
-        waitDurationInOpenState: 10s
-        permittedNumberOfCallsInHalfOpenState: 3
-        minimumNumberOfCalls: 5
-        automaticTransitionFromOpenToHalfOpenEnabled: true
+      healthCheck:
+        slidingWindowSize: 50
+        failureRateThreshold: 80
   ratelimiter:
     instances:
       default:
         limitForPeriod: 50
         timeoutDuration: 5s
-        limit-refresh-period:
-          nanos: 10000
+      healthCheck:
+        limitForPeriod: 1000
+        timeoutDuration: 1s
   bulkhead:
     instances:
       default:
         maxConcurrentCalls: 100
         maxWaitDuration: 300ms
+      healthCheck:
+        maxConcurrentCalls: 500
+        maxWaitDuration: 500ms
