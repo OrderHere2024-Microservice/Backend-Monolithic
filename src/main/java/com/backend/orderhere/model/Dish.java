@@ -66,4 +66,7 @@ public class Dish {
 
   @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<LinkOrderDish> linkOrderDishes;
+
+  @Column(name = "is_deleted", nullable = false)
+  private Boolean isDeleted;
 }

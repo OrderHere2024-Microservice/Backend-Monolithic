@@ -5,6 +5,7 @@ import lombok.Data;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.pagination.sync.PaginatedResponsesIterator;
 
 import java.math.BigDecimal;
 
@@ -26,4 +27,5 @@ public class DishCreateDto {
     private Integer restaurantId;
     private Boolean availability;
     private Integer categoryId;
+    private Boolean isDeleted = false;
 }
