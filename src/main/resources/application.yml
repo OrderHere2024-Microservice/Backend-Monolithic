@@ -26,33 +26,21 @@ spring:
 resilience4j:
   retry:
     instances:
-      default:
-        maxAttempts: 2
-        waitDuration: 500ms
       healthCheck:
         maxAttempts: 10
         waitDuration: 100ms
   circuitbreaker:
     instances:
-      default:
-        slidingWindowSize: 10
-        failureRateThreshold: 50
       healthCheck:
         slidingWindowSize: 50
         failureRateThreshold: 80
   ratelimiter:
     instances:
-      default:
-        limitForPeriod: 50
-        timeoutDuration: 5s
       healthCheck:
         limitForPeriod: 1000
         timeoutDuration: 1s
   bulkhead:
     instances:
-      default:
-        maxConcurrentCalls: 100
-        maxWaitDuration: 300ms
       healthCheck:
         maxConcurrentCalls: 500
         maxWaitDuration: 500ms

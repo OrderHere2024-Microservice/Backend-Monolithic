@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 // Health check endpoint for the application
 @RestController
 @RequestMapping("/health-check")
-@Retry(name = "healthCheck")
-@CircuitBreaker(name = "healthCheck")
 public class HealthCheck {
     @GetMapping
     public ResponseEntity<String> healthCheck() {
