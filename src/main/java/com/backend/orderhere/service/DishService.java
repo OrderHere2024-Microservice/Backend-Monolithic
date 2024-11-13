@@ -46,7 +46,7 @@ public class DishService {
                                                                Sort.Direction order) {
     Pageable pageable = PageableUtil.determinePageable(page, size, Sort.by(order, sort.getName()));
 
-    Page<Dish> dishPage = dishRepository.findDishesByRestaurantId(restaurantId, pageable);
+    Page<Dish> dishPage = dishRepository.findDishesByRestaurantIdAndIsDeletedFalse(restaurantId, pageable);
 
     List<DishGetDto> dishGetDtoList = dishPage.getContent()
             .stream()
@@ -62,7 +62,7 @@ public class DishService {
   }
 
   public List<DishGetDto> getDishByCategory(Integer restaurantId, Integer categoryId) {
-    return dishRepository.findAllByRestaurantIdAndCategoryCategoryId(restaurantId, categoryId)
+    return dishRepository.findAllByRestaurantIdAndCategoryCategoryIdAndIsDeletedFalse(restaurantId, categoryId)
             .stream()
             .map(dishMapper::dishToDishGetDto)
             .toList();
@@ -114,7 +114,8 @@ public class DishService {
   public void deleteDish(Integer dishId) throws Exception {
     Dish dish = dishRepository.findById(dishId)
             .orElseThrow(() -> new ResourceNotFoundException("Dish not found with id: " + dishId));
-    storageService.deleteFile(bucketName, dish.getImageUrl());
-    dishRepository.delete(dish);
+    // storageService.deleteFile(bucketName, dish.getImageUrl());
+    dish.setIsDeleted(true);
+    dishRepository.save(dish);
   }
 }

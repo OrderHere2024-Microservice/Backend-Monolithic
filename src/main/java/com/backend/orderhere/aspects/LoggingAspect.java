@@ -12,12 +12,12 @@ public class LoggingAspect {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Before("com.backend.orderhere.config.CommonPointcutConfig.serviceBeans()")
+    // @Before("com.backend.orderhere.config.CommonPointcutConfig.serviceBeans()")
     public void logMethodCallBeforeExecution(JoinPoint joinPoint) {
         logger.info("Before Aspect: {} - is called with arguments - {}", joinPoint.getSignature(), joinPoint.getArgs());
     }
 
-    @After("com.backend.orderhere.config.CommonPointcutConfig.serviceBeans()")
+    // @After("com.backend.orderhere.config.CommonPointcutConfig.serviceBeans()")
     public void logMethodCallAfterExecution(JoinPoint joinPoint) {
         logger.info("After Aspect: {} has executed", joinPoint.getSignature());
     }

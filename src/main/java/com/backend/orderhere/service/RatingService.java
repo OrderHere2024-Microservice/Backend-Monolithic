@@ -43,7 +43,7 @@ public class RatingService {
 
     public RatingGetDto createRating(RatingPostDto ratingPostDto) {
         Rating rating = ratingMapper.ratingPostDtoToRating(ratingPostDto);
-        rating.setDish(dishRepository.findByDishId(ratingPostDto.getDishId()));
+        rating.setDish(dishRepository.findByDishIdAndIsDeletedFalse(ratingPostDto.getDishId()));
         User user = userRepository.findByUserId(ratingPostDto.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         rating.setUser(user);
         ratingRepository.save(rating);

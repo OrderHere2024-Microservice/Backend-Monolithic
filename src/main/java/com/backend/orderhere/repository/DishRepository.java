@@ -10,10 +10,11 @@ import java.util.List;
 
 @Repository
 public interface DishRepository extends JpaRepository<Dish, Integer> {
-  Page<Dish> findDishesByRestaurantId(Integer restaurantId, Pageable pageable);
 
-  List<Dish> findAllByRestaurantIdAndCategoryCategoryId(Integer restaurantId, Integer categoryId);
+  Page<Dish> findDishesByRestaurantIdAndIsDeletedFalse(Integer restaurantId, Pageable pageable);
 
-  Dish findByDishId(Integer dishId);
+  List<Dish> findAllByRestaurantIdAndCategoryCategoryIdAndIsDeletedFalse(Integer restaurantId, Integer categoryId);
+
+  Dish findByDishIdAndIsDeletedFalse(Integer dishId);
 
 }
