@@ -3,7 +3,7 @@ package com.backend.orderhere.service.storageService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -22,7 +22,7 @@ public class S3StorageService implements StorageService {
 
     public S3StorageService() {
         this.s3Client = S3Client.builder()
-                .credentialsProvider(ProfileCredentialsProvider.create())
+                .credentialsProvider(DefaultCredentialsProvider.create())
                 .endpointOverride(URI.create("https://s3.amazonaws.com"))
                 .region(Region.AP_SOUTHEAST_2)
                 .build();
