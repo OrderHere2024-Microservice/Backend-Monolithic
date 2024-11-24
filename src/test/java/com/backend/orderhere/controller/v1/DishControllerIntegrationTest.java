@@ -39,6 +39,6 @@ public class DishControllerIntegrationTest {
 
         mockMvc.perform(delete("/1/2")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 }
