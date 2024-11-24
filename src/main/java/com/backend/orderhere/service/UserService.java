@@ -32,7 +32,6 @@ public class UserService {
 
   private final UserAddressRepository userAddressRepository;
   private final UserMapper userMapper;
-  private final TokenService tokenService;
   private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
   private final StorageService storageService;
 
@@ -43,7 +42,6 @@ public class UserService {
   public UserService(UserRepository userRepository, UserMapper userMapper, TokenService tokenService, UserAddressRepository userAddressRepository, StorageService storageService) {
     this.userRepository = userRepository;
     this.userMapper = userMapper;
-    this.tokenService = tokenService;
     this.userAddressRepository = userAddressRepository;
     this.storageService = storageService;
   }
@@ -66,23 +64,6 @@ public class UserService {
   public User findByEmail(String email) {
     return userRepository.findByEmail(email).orElseThrow(
         () -> new ResourceNotFoundException("User not found"));
-  }
-
-  public boolean resetPassword(String email, String code, String newPassword) {
-
-    //retrieve user details
-    User user = userRepository.findByEmail(email).orElseThrow(
-        () -> new ResourceNotFoundException("User not found"));
-
-    //Create BCryptPassword
-    String hashedPassword = encoder.encode(newPassword);
-
-    if (tokenService.isCodeValid(code)) {
-      user.setPassword(hashedPassword);
-      userRepository.save(user);
-      return true; // reset success
-    }
-    return false; // reset fail
   }
 
   public UserSignUpResponseDTO createUser(UserSignUpRequestDTO userSignUpRequestDTO) {
@@ -154,21 +135,6 @@ public class UserService {
             .userRole(UserRole.customer)
             .build();
     return userRepository.save(user);
-  }
-
-  public String checkUserOpenId(String openId, String provider) {
-    if(provider.equals("google")){
-      Optional<User> existUser = userRepository.findByGoogleOpenId(openId);
-      if(existUser.isPresent()){
-        return JwtUtil.generateToken(existUser.get());
-      }
-    }else if(provider.equals("facebook")){
-      Optional<User> existUser = userRepository.findByFacebookOpenId(openId);
-      if(existUser.isPresent()){
-        return JwtUtil.generateToken(existUser.get());
-      }
-    }
-    return null;
   }
 
   public UserGetDto getUserProfile(String token) {

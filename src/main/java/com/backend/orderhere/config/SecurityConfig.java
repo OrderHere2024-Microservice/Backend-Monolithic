@@ -1,9 +1,6 @@
 package com.backend.orderhere.config;
 
 
-import com.backend.orderhere.auth.ApplicationUserService;
-import com.backend.orderhere.filter.JwtCredentialsAuthenticationFilter;
-import com.backend.orderhere.filter.JwtVerifyFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,13 +16,23 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -33,24 +40,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  private final ApplicationUserService applicationUserService;
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
-        .csrf(AbstractHttpConfigurer::disable)
-        .cors(Customizer.withDefaults())
-        .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .addFilter(new JwtCredentialsAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))))
-        .addFilterAfter(new JwtVerifyFilter(), JwtCredentialsAuthenticationFilter.class)
-            .authorizeHttpRequests(auth -> {
-              auth.requestMatchers(HttpMethod.POST, "/v1/public/orders").permitAll();
-              auth.requestMatchers(StaticConfig.ignoreUrl).permitAll();
-              auth.requestMatchers(HttpMethod.GET, StaticConfig.getOnlyUrl).permitAll();
-              auth.anyRequest().authenticated();
-            });
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(Customizer.withDefaults())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(HttpMethod.POST, "/v1/public/orders").permitAll()
+                    .requestMatchers(StaticConfig.ignoreUrl).permitAll()
+                    .requestMatchers(HttpMethod.GET, StaticConfig.getOnlyUrl).permitAll()
+                    .anyRequest().authenticated()
+            );
+
     return http.build();
   }
+
+
+
+
 
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
@@ -64,26 +74,26 @@ public class SecurityConfig {
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-    return authenticationConfiguration.getAuthenticationManager();
+  public JwtDecoder jwtDecoder() {
+    return NimbusJwtDecoder.withJwkSetUri("http://localhost:7080/realms/orderhere/protocol/openid-connect/certs")
+            .build();
   }
 
   @Bean
-  public WebSecurityCustomizer webSecurityCustomizer(AuthenticationManagerBuilder auth) {
-    return web -> auth.authenticationProvider(daoAuthenticationProvider());
+  public JwtAuthenticationConverter jwtAuthenticationConverter() {
+    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+      Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
+      Map<String, Object> clientRoles = (Map<String, Object>) resourceAccess.get("orderhere-mono");
+      List<String> roles = (List<String>) clientRoles.get("roles");
+      // Convert roles into Spring Security authorities
+      Collection<GrantedAuthority> authorities = roles.stream()
+              .map(SimpleGrantedAuthority::new)
+              .collect(Collectors.toList());
+      return authorities;
+    });
+    return jwtAuthenticationConverter;
   }
 
-  @Bean
-  public DaoAuthenticationProvider daoAuthenticationProvider() {
-    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-    provider.setPasswordEncoder(passwordEncoder());
-    provider.setUserDetailsService((applicationUserService));
-    return provider;
-  }
-
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
 }
 

@@ -9,6 +9,7 @@ services:
       - '5432:5432'
     volumes:
       - ./init-scripts:/docker-entrypoint-initdb.d:ro
+      - postgres_data:/var/lib/postgresql/data
     networks:
         - keycloak-network
   minio:
@@ -43,6 +44,7 @@ services:
 
 volumes:
   minio_data: {}
+  postgres_data: {}
 
 networks:
   keycloak-network:

@@ -29,7 +29,7 @@ public class OrderGraphQLController {
     @Autowired
     private HttpServletRequest request;
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('sys_admin') or hasRole('driver')")
     @QueryMapping
     public List<OrderGetDTO> getAllOrders() {
         return orderService.getAllOrders();

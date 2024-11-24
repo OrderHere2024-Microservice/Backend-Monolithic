@@ -1,6 +1,5 @@
 package com.backend.orderhere.filter;
 
-import com.backend.orderhere.auth.ApplicationUserDetails;
 import com.backend.orderhere.config.StaticConfig;
 import com.backend.orderhere.model.User;
 import io.jsonwebtoken.Claims;
@@ -9,7 +8,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
 import java.time.Instant;
 import java.util.*;
@@ -17,21 +18,6 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtUtil {
-
-    //generate Jwt token based on Authentication(username and password)
-    public static String generateToken(Authentication authResult) {
-        ApplicationUserDetails applicationUserDetails = (ApplicationUserDetails) authResult.getPrincipal();
-        return Jwts.builder()
-                .setSubject(authResult.getName())
-                .claim("authorities", authResult.getAuthorities())
-                .claim("userId", applicationUserDetails.getUserId())
-                .claim("avatarURL", applicationUserDetails.getUserAvatarURL())
-                .claim("userName", applicationUserDetails.getUserName())
-                .setIssuedAt(new Date())
-                .setExpiration(Date.from(Instant.now().plusMillis(24 * 60 * 60 * 1000))) //24 hours expiration
-                .signWith(Keys.hmacShaKeyFor(StaticConfig.JwtSecretKey.getBytes()))
-                .compact();
-    }
 
     //generate Jwt token based on Exist user
     public static String generateToken(User user) {
