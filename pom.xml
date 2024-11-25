@@ -116,21 +116,6 @@
 			<version>2.10.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			<version>1.6.2</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>javax.activation-api</artifactId>
-			<version>1.2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-api</artifactId>
-			<version>0.11.2</version>
-		</dependency>
-		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>1.5.2.Final</version>
@@ -153,10 +138,6 @@
 			<groupId>com.stripe</groupId>
 			<artifactId>stripe-java</artifactId>
 			<version>20.103.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sendgrid</groupId>
-			<artifactId>sendgrid-java</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.hypersistence</groupId>

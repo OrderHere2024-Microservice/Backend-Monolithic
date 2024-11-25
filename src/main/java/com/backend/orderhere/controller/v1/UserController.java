@@ -1,9 +1,7 @@
 package com.backend.orderhere.controller.v1;
 
-import com.backend.orderhere.config.StaticConfig;
 import com.backend.orderhere.dto.user.UserProfileUpdateDTO;
 import com.backend.orderhere.dto.user.*;
-import com.backend.orderhere.model.User;
 import com.backend.orderhere.service.TokenService;
 import com.backend.orderhere.service.UserService;
 import jakarta.validation.Valid;
@@ -12,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.mail.MessagingException;
 
 @RestController
 @RequestMapping("/v1/public/users")
