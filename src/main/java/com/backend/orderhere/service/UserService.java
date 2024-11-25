@@ -18,8 +18,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class UserService {
 
@@ -61,10 +59,6 @@ public class UserService {
     }
   }
 
-  public User findByEmail(String email) {
-    return userRepository.findByEmail(email).orElseThrow(
-        () -> new ResourceNotFoundException("User not found"));
-  }
 
   public UserSignUpResponseDTO createUser(UserSignUpRequestDTO userSignUpRequestDTO) {
 
