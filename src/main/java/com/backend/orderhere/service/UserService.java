@@ -39,7 +39,7 @@ public class UserService {
   private String bucketName;
 
   @Autowired
-  public UserService(UserRepository userRepository, UserMapper userMapper, TokenService tokenService, UserAddressRepository userAddressRepository, StorageService storageService) {
+  public UserService(UserRepository userRepository, UserMapper userMapper, UserAddressRepository userAddressRepository, StorageService storageService) {
     this.userRepository = userRepository;
     this.userMapper = userMapper;
     this.userAddressRepository = userAddressRepository;
@@ -84,42 +84,6 @@ public class UserService {
     //create user and map user to response form
     User createdUser = userRepository.save(user);
     return userMapper.userToUserSignUpResponseDTO(createdUser);
-  }
-
-  public String createUser(OauthProviderLoginSessionDTO sessionData, String openId, String provider) {
-
-    //Create BCryptPassword by userEmail
-    String hashedPassword = encoder.encode(sessionData.getUsername() + sessionData.getEmail());
-    //create user
-    if(provider.equals("google")){
-      User user = User.builder()
-          .username(sessionData.getUsername())
-          .firstname(sessionData.getUsername())
-          .lastname(" ")
-          .email(sessionData.getEmail())
-          .password(hashedPassword)
-          .point(INIT_REWARD_POINT)
-          .avatarUrl(sessionData.getAvatarUrl())
-          .userRole(UserRole.customer)
-          .googleOpenId(openId)
-          .build();
-      User createdUser = userRepository.save(user);
-      return JwtUtil.generateToken(createdUser);
-    }else {
-      User user = User.builder()
-          .username(sessionData.getUsername())
-          .firstname(sessionData.getUsername())
-          .lastname(" ")
-          .email(sessionData.getEmail())
-          .password(hashedPassword)
-          .point(INIT_REWARD_POINT)
-          .avatarUrl(sessionData.getAvatarUrl())
-          .userRole(UserRole.customer)
-          .facebookOpenId(openId)
-          .build();
-      User createdUser = userRepository.save(user);
-      return JwtUtil.generateToken(createdUser);
-    }
   }
 
   public User createAndReturnUser(UserSignUpRequestDTO userSignUpRequestDTO) {

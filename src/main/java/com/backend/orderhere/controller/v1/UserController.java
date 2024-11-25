@@ -2,7 +2,6 @@ package com.backend.orderhere.controller.v1;
 
 import com.backend.orderhere.dto.user.UserProfileUpdateDTO;
 import com.backend.orderhere.dto.user.*;
-import com.backend.orderhere.service.TokenService;
 import com.backend.orderhere.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +15,10 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   private final UserService userService;
-  private final TokenService tokenService;
 
   @Autowired
-  public UserController(UserService userService, TokenService tokenService) {
+  public UserController(UserService userService) {
     this.userService = userService;
-    this.tokenService = tokenService;
   }
 
   @PutMapping("/{userId}/profile")
