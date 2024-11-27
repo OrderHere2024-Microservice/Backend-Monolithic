@@ -28,6 +28,13 @@ spring:
         jwt:
           issuer-uri: http://localhost:7080/realms/orderhere
 
+keyCloak:
+  serverUrl: http://localhost:7080
+  realm: orderhere
+  clientId: admin-cli
+  username: admin
+  password: admin
+
 storage:
   bucketName: my-bucket
   url: http://127.0.0.1:9000

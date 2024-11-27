@@ -1,8 +1,8 @@
 package com.backend.orderhere.controller.v1;
 
+import com.backend.orderhere.auth.KeyCloakService;
 import com.backend.orderhere.dto.user.UserProfileUpdateDTO;
 import com.backend.orderhere.dto.user.*;
-import com.backend.orderhere.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,29 +14,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/public/users")
 public class UserController {
 
-  private final UserService userService;
+  private final KeyCloakService keyCloakService;
 
   @Autowired
-  public UserController(UserService userService) {
-    this.userService = userService;
+  public UserController(KeyCloakService keyCloakService) {
+    this.keyCloakService = keyCloakService;
   }
 
   @PutMapping("/{userId}/profile")
-  public ResponseEntity<UserProfileUpdateDTO> updateProfile(@PathVariable Integer userId, @RequestBody UserProfileUpdateDTO dto) {
-    UserProfileUpdateDTO updatedUserProfile = userService.updateUserProfile(userId, dto);
-    return new ResponseEntity<>(updatedUserProfile, HttpStatus.OK);
-  }
+  public ResponseEntity<UserProfileUpdateDTO> updateProfile(@PathVariable String userId, @RequestBody UserProfileUpdateDTO dto) {
 
-  @PostMapping("/signup")
-  public ResponseEntity<UserSignUpResponseDTO> userSignUp(@RequestBody UserSignUpRequestDTO userSignUpRequestDTO) {
-    UserSignUpResponseDTO user = userService.createUser(userSignUpRequestDTO);
-    return new ResponseEntity<UserSignUpResponseDTO>(user, HttpStatus.OK);
+    UserProfileUpdateDTO updatedUserProfile = keyCloakService.updateUserProfile(userId, dto);
+    return new ResponseEntity<>(updatedUserProfile, HttpStatus.OK);
   }
 
   @GetMapping("/profile")
   public ResponseEntity<?> getUserProfile(@RequestHeader(name = "Authorization") String authorizationHeader) {
     try {
-      return new ResponseEntity<>(userService.getUserProfile(authorizationHeader), HttpStatus.OK);
+      return new ResponseEntity<>(keyCloakService.getUserProfile(authorizationHeader), HttpStatus.OK);
     }
     catch (Exception e) {
       return new ResponseEntity<>(e.getCause(), HttpStatus.BAD_REQUEST);
@@ -45,14 +40,14 @@ public class UserController {
 
   @PutMapping("/profile")
   public ResponseEntity<UserProfileUpdateDTO> updateUserProfileWithToken(@RequestHeader(name = "Authorization") String authorizationHeader, @RequestBody UserProfileUpdateDTO dto) {
-    UserProfileUpdateDTO updatedUserProfile = userService.updateUserProfileWithToken(authorizationHeader, dto);
+    UserProfileUpdateDTO updatedUserProfile = keyCloakService.updateUserProfileWithToken(authorizationHeader, dto);
     return new ResponseEntity<>(updatedUserProfile, HttpStatus.OK);
   }
 
   @PutMapping(value = "/profile/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<String> updateUserAvatar(@RequestHeader(name = "Authorization") String authorizationHeader, @Valid @ModelAttribute UserAvatarUpdateDto userAvatarUpdateDto) {
     try {
-      return new ResponseEntity<>(userService.updateUserAvatar(authorizationHeader, userAvatarUpdateDto), HttpStatus.OK);
+      return new ResponseEntity<>(keyCloakService.updateUserAvatar(authorizationHeader, userAvatarUpdateDto), HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }

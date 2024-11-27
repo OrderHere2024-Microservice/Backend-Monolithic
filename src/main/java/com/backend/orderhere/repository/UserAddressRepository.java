@@ -12,9 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserAddressRepository extends JpaRepository<UserAddress, Integer> {
-  List<UserAddress> findAllByUserId(Integer userId);
-
-  Optional<UserAddress> findFirstByUserIdAndIsDefault(Integer userId, boolean isDefault);
+  List<UserAddress> findAllByUserId(String userId);
 
   Optional<UserAddress> findByUserAddressId(Integer userAddressId);
 
@@ -24,11 +22,11 @@ public interface UserAddressRepository extends JpaRepository<UserAddress, Intege
   @Transactional
   @Modifying
   @Query("UPDATE UserAddress ua SET ua.isDefault = false WHERE ua.userId = ?1")
-  void setAllIsDefaultToFalseForUser(Integer userId);
+  void setAllIsDefaultToFalseForUser(String userId);
 
   @Query("SELECT ua FROM UserAddress ua WHERE ua.userId = ?1 ORDER BY ua.updatedTime DESC")
-  Optional<UserAddress> findLatestUpdatedAddressByUserId(Integer userId);
+  Optional<UserAddress> findLatestUpdatedAddressByUserId(String userId);
 
   @Query("SELECT COUNT(ua) FROM UserAddress ua WHERE ua.userId = ?1 AND ua.isDefault = true")
-  Long countDefaultAddressesForUser(Integer userId);
+  Long countDefaultAddressesForUser(String userId);
 }

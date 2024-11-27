@@ -6,10 +6,8 @@ import com.backend.orderhere.exception.ResourceNotFoundException;
 import com.backend.orderhere.mapper.RatingMapper;
 import com.backend.orderhere.model.Dish;
 import com.backend.orderhere.model.Rating;
-import com.backend.orderhere.model.User;
 import com.backend.orderhere.repository.DishRepository;
 import com.backend.orderhere.repository.RatingRepository;
-import com.backend.orderhere.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,7 +25,6 @@ public class RatingService {
     private final RatingRepository ratingRepository;
     private final RatingMapper ratingMapper;
     private final DishRepository dishRepository;
-    private final UserRepository userRepository;
 
     public List<RatingGetDto> getRatingsByDishId(Integer dishId) {
         List<Rating> ratingList = ratingRepository.findAllByDishDishId(dishId);
@@ -36,16 +33,14 @@ public class RatingService {
                 .toList();
     }
 
-    public List<RatingGetDto> getRatingsByUserId(Integer userId) {
-        List<Rating> ratingList = ratingRepository.findAllByUserUserId(userId);
+    public List<RatingGetDto> getRatingsByUserId(String userId) {
+        List<Rating> ratingList = ratingRepository.findAllByUserId(userId);
         return ratingList.stream().map(ratingMapper::ratingToRatingGetDto).toList();
     }
 
     public RatingGetDto createRating(RatingPostDto ratingPostDto) {
         Rating rating = ratingMapper.ratingPostDtoToRating(ratingPostDto);
         rating.setDish(dishRepository.findByDishIdAndIsDeletedFalse(ratingPostDto.getDishId()));
-        User user = userRepository.findByUserId(ratingPostDto.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        rating.setUser(user);
         ratingRepository.save(rating);
         updateDishRating(rating.getDish().getDishId());
 
@@ -78,12 +73,8 @@ public class RatingService {
 
             Dish dish = dishRepository.findById(ratingPostDto.getDishId())
                     .orElseThrow(() -> new ResourceNotFoundException("Dish not found with id: " + ratingPostDto.getDishId()));
-            User user = userRepository.findById(ratingPostDto.getUserId())
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + ratingPostDto.getUserId()));
-
             Rating rating = new Rating();
             rating.setDish(dish);
-            rating.setUser(user);
             rating.setRatingValue(ratingPostDto.getRatingValue());
             rating.setComments(ratingPostDto.getComments());
 

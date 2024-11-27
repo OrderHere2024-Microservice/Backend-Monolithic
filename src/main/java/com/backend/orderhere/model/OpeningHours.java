@@ -38,10 +38,6 @@ public class OpeningHours {
   @Column(name = "closing_time", nullable = false)
   private String closingTime;
 
-//  @CreationTimestamp
-//  @Column(name = "created_time", nullable = false)
-//  private ZonedDateTime createdTime;
-
   @UpdateTimestamp
   @Column(name = "updated_time", nullable = false)
   private ZonedDateTime updatedTime;
