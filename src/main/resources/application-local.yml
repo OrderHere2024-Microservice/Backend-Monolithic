@@ -34,6 +34,8 @@ keyCloak:
   clientId: admin-cli
   username: admin
   password: admin
+  jwt:
+    publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0qpWkdz7kIomLQcd6HLvz0mPbQptypl3JPQyrpE9lzs6fqJpqomlpQxPoxnFAentrnGoXzAk05ufsaX2p79Bj6Z/mY3QCXiM83h3k5JPQsChS5lDYpsEnmC9JGIG8BUrx7yaRRKG7TW30DSo2EHIdaUKNggimODfnLRTLd+yQST7V//2ZzO5/4fi/Q5UZW9s/V1tTEsuBJe1tGb+FUiOvXHUGBmT+OeJPfJkyfQEeMLQ41zCpZdYLa5NI1S7t/l81fU45/ZdDlE46PmDwfySAb7wTT5R7cdSCt/WWwcOTj4JxBcGc3+2vmyLtJCbcTXQ5MXWdN1T4MGvXnUKkHdzIwIDAQAB
 
 storage:
   bucketName: my-bucket

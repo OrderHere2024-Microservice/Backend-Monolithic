@@ -9,14 +9,13 @@ import com.backend.orderhere.dto.order.PlaceOrderDTO;
 import com.backend.orderhere.dto.order.UpdateOrderStatusDTO;
 import com.backend.orderhere.dto.user.UserSignUpRequestDTO;
 import com.backend.orderhere.exception.ResourceNotFoundException;
-import com.backend.orderhere.filter.JwtUtil;
+import com.backend.orderhere.auth.JwtUtil;
 import com.backend.orderhere.mapper.OrderMapper;
 import com.backend.orderhere.model.*;
 import com.backend.orderhere.model.enums.OrderStatus;
 import com.backend.orderhere.model.enums.OrderType;
 import com.backend.orderhere.repository.*;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,10 +33,10 @@ public class OrderService {
     private final RestaurantRepository restaurantRepository;
     private final PaymentRepository paymentRepository;
     private final KeyCloakService keyCloakService;
+    private final JwtUtil jwtUtil;
 
 
-    @Autowired
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, LinkOrderDishRepository linkOrderRepository, DishRepository dishRepository, RestaurantRepository restaurantRepository, PaymentRepository paymentRepository, KeyCloakService keyCloakService) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, LinkOrderDishRepository linkOrderRepository, DishRepository dishRepository, RestaurantRepository restaurantRepository, PaymentRepository paymentRepository, KeyCloakService keyCloakService, JwtUtil jwtUtil) {
         this.orderRepository = orderRepository;
         this.linkOrderDishRepository = linkOrderRepository;
         this.dishRepository = dishRepository;
@@ -45,6 +44,7 @@ public class OrderService {
         this.restaurantRepository = restaurantRepository;
         this.paymentRepository = paymentRepository;
         this.keyCloakService = keyCloakService;
+        this.jwtUtil = jwtUtil;
     }
 
     public List<OrderGetDTO> getAllOrders() {
@@ -82,7 +82,7 @@ public class OrderService {
     }
 
     public List<OrderGetDTO> getOrderByUserId(String token) {
-        String userId = (token != null) ? JwtUtil.getUserIdFromToken(token) : null;
+        String userId = (token != null) ? jwtUtil.getUserIdFromToken(token) : null;
         List<Order> orders = orderRepository.findByUserId(userId);
         if (orders.isEmpty()) {
             throw new ResourceNotFoundException("No orders found for the user");
@@ -160,7 +160,7 @@ public class OrderService {
     }
 
     public Order PlaceOrder(String token, PlaceOrderDTO placeOrderDTO) {
-        String userId = (token != null) ? JwtUtil.getUserIdFromToken(token) : null;
+        String userId = (token != null) ? jwtUtil.getUserIdFromToken(token) : null;
         Order order = orderMapper.dtoToOrder(placeOrderDTO);
         Restaurant restaurant = restaurantRepository.findById(placeOrderDTO.getRestaurantId())
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found with ID: " + placeOrderDTO.getRestaurantId()));

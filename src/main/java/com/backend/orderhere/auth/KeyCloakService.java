@@ -1,11 +1,9 @@
 package com.backend.orderhere.auth;
 
 import com.backend.orderhere.dto.user.*;
-import com.backend.orderhere.filter.JwtUtil;
 import com.backend.orderhere.service.storageService.StorageService;
 import jakarta.transaction.Transactional;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,9 +27,12 @@ public class KeyCloakService {
     private final Keycloak keycloak;
     private final StorageService storageService;
 
-    public KeyCloakService(Keycloak keycloak, StorageService storageService) {
+    private final JwtUtil jwtUtil;
+
+    public KeyCloakService(Keycloak keycloak, StorageService storageService, JwtUtil jwtUtil) {
         this.storageService = storageService;
         this.keycloak = keycloak;
+        this.jwtUtil = jwtUtil;
     }
 
     public String getUsernameFromKeycloak(String userId) {
@@ -41,7 +42,7 @@ public class KeyCloakService {
 
     public UserGetDto getUserProfile(String token) {
 
-        String userId = JwtUtil.getUserIdFromToken(token);
+        String userId = jwtUtil.getUserIdFromToken(token);
 
         UserResource userResource = keycloak.realm(realm).users().get(userId);
         UserRepresentation user = userResource.toRepresentation();
@@ -79,7 +80,7 @@ public class KeyCloakService {
     @Transactional
     public UserProfileUpdateDTO updateUserProfileWithToken(String token, UserProfileUpdateDTO userProfileUpdateDTO) {
 
-        String userId = JwtUtil.getUserIdFromToken(token);
+        String userId = jwtUtil.getUserIdFromToken(token);
 
         UserRepresentation user = keycloak.realm(realm).users().get(userId).toRepresentation();
 
@@ -95,7 +96,7 @@ public class KeyCloakService {
     @Transactional
     public String updateUserAvatar(String token, UserAvatarUpdateDto userAvatarUpdateDto) throws Exception {
 
-        String userId = JwtUtil.getUserIdFromToken(token);
+        String userId = jwtUtil.getUserIdFromToken(token);
 
         UserRepresentation userRepresentation = keycloak.realm(realm).users().get(userId).toRepresentation();
 
