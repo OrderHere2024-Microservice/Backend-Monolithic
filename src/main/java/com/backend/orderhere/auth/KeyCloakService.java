@@ -1,11 +1,15 @@
 package com.backend.orderhere.auth;
 
+import com.backend.orderhere.OrderHereApplication;
 import com.backend.orderhere.dto.user.*;
 import com.backend.orderhere.service.storageService.StorageService;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,8 @@ import java.util.Map;
 
 @Service
 public class KeyCloakService {
+
+    private static final Logger logger = LoggerFactory.getLogger(KeyCloakService.class);
 
     private final static String INIT_AVATAR_URL = "SOME_DEFAULT_URL";
 
@@ -36,8 +42,13 @@ public class KeyCloakService {
     }
 
     public String getUsernameFromKeycloak(String userId) {
-        UserRepresentation user = keycloak.realm(realm).users().get(userId).toRepresentation();
-        return user.getUsername();
+        try {
+            UserRepresentation user = keycloak.realm(realm).users().get(userId).toRepresentation();
+            return user.getUsername();
+        } catch (NotFoundException e) {
+            logger.info("User not found in keycloak with id: {}", userId);
+            return "Username known";
+        }
     }
 
     public UserGetDto getUserProfile(String token) {
