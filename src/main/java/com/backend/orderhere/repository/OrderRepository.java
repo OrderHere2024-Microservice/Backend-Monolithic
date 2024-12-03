@@ -6,6 +6,7 @@ import com.backend.orderhere.model.enums.OrderType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
@@ -13,7 +14,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
   List<Order> findByOrderType(OrderType orderType);
 
-  List<Order> findByUserId(String userId);
+  Optional<List<Order>> findByUserId(String userId);
 
   Order findByOrderId(Integer orderId);
 }

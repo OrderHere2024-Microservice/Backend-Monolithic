@@ -78,6 +78,9 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
             Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
             Map<String, Object> clientRoles = (Map<String, Object>) resourceAccess.get("orderhere-mono");
+            if (clientRoles == null) {
+                return List.of();
+            }
             List<String> roles = (List<String>) clientRoles.get("roles");
             // Convert roles into Spring Security authorities
             Collection<GrantedAuthority> authorities = roles.stream()

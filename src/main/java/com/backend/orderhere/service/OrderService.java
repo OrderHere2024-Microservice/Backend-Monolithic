@@ -83,10 +83,8 @@ public class OrderService {
 
     public List<OrderGetDTO> getOrderByUserId(String token) {
         String userId = (token != null) ? jwtUtil.getUserIdFromToken(token) : null;
-        List<Order> orders = orderRepository.findByUserId(userId);
-        if (orders.isEmpty()) {
-            throw new ResourceNotFoundException("No orders found for the user");
-        }
+        List<Order> orders = orderRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("No orders found for the user"));
         return orders.stream().map(order -> {
             OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
             List<LinkOrderDish> linkOrderDishes = linkOrderDishRepository.findByOrderOrderId(order.getOrderId());
