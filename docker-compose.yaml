@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   postgres:
@@ -9,6 +9,9 @@ services:
       - 'POSTGRES_USER=postgres'
     ports:
       - '5432:5432'
+    volumes:
+      - ./init-scripts:/docker-entrypoint-initdb.d:ro
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
 
@@ -26,15 +29,36 @@ services:
     networks:
       - app-network
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.5
+    environment:
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://postgres:5432/keycloak
+      - KC_DB_USERNAME=postgres
+      - KC_DB_PASSWORD=orderhere
+      - KC_HOSTNAME=keycloak
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+    ports:
+      - '7080:8080'
+    depends_on:
+      - postgres
+    command: start-dev
+    networks:
+      - app-network
+
   app:
     build:
       context: .
     environment:
+      SPRING_PROFILES_ACTIVE: local
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: orderhere
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/orderhere
       STORAGE_URL: http://minio:9000
       STRIPE_API_KEY: ${STRIPE_API_KEY}
+      KEYCLOAK_SERVERURL: http://keycloak:8080
     depends_on:
       - postgres
       - minio
@@ -45,6 +69,7 @@ services:
 
 volumes:
   minio_data: {}
+  postgres_data: {}
 
 networks:
   app-network:

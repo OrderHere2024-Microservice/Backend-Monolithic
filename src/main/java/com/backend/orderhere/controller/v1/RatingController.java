@@ -27,7 +27,7 @@ public class RatingController {
 
   @GetMapping("/{userId}")
   @ResponseStatus(HttpStatus.OK)
-  public List<RatingGetDto> getRatingsByUserId(@PathVariable Integer userId) {
+  public List<RatingGetDto> getRatingsByUserId(@PathVariable String userId) {
     return ratingService.getRatingsByUserId(userId);
   }
 

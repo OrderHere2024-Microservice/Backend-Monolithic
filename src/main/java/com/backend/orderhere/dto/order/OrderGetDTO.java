@@ -12,7 +12,7 @@ public class OrderGetDTO {
 
   private Integer orderId;
   private Integer restaurantId;
-  private Integer userId;
+  private String userId;
   private List<OrderDishDTO> dishes;
   private String username;
   private String orderStatus;

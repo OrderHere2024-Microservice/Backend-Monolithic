@@ -24,7 +24,7 @@ public class UserAddress {
   private Integer userAddressId;
 
   @Column(name = "user_id", nullable = false)
-  private Integer userId;
+  private String userId;
 
   @Column(name = "address", nullable = false)
   private String address;

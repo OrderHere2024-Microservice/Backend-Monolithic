@@ -12,6 +12,4 @@ public interface UserAddressMapper {
   UserAddressGetDto UserAddressToUserAddressGetDto(UserAddress userAddress);
 
   UserAddress UserAddressPostDtoToUserAddress(UserAddressPostDto userAddressPostDto);
-
-  UserAddress UserAddressPutDtoToUserAddress(UserAddressPutDto userAddressPutDto);
 }

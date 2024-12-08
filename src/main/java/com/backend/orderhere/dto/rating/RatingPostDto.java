@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RatingPostDto {
-  private Integer userId;
+  private String userId;
   private Integer dishId;
   private BigDecimal ratingValue;
   private String comments;

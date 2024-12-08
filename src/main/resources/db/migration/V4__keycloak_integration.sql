@@ -1,0 +1,29 @@
+-- Drop foreign key constraints
+ALTER TABLE user_address DROP CONSTRAINT IF EXISTS user_address_user_id_fkey;
+ALTER TABLE orders DROP CONSTRAINT IF EXISTS orders_user_id_fkey;
+ALTER TABLE booking DROP CONSTRAINT IF EXISTS booking_user_id_fkey;
+ALTER TABLE rating DROP CONSTRAINT IF EXISTS rating_user_id_fkey;
+
+-- Alter user_id column type
+ALTER TABLE user_address
+ALTER COLUMN user_id TYPE VARCHAR(128) USING user_id::VARCHAR(128),
+ALTER COLUMN user_id DROP DEFAULT,
+ALTER COLUMN user_id SET NOT NULL;
+
+ALTER TABLE orders
+ALTER COLUMN user_id TYPE VARCHAR(128) USING user_id::VARCHAR(128),
+ALTER COLUMN user_id DROP DEFAULT,
+ALTER COLUMN user_id SET NOT NULL;
+
+ALTER TABLE booking
+ALTER COLUMN user_id TYPE VARCHAR(128) USING user_id::VARCHAR(128),
+ALTER COLUMN user_id DROP DEFAULT,
+ALTER COLUMN user_id SET NOT NULL;
+
+ALTER TABLE rating
+ALTER COLUMN user_id TYPE VARCHAR(128) USING user_id::VARCHAR(128),
+ALTER COLUMN user_id DROP DEFAULT,
+ALTER COLUMN user_id SET NOT NULL;
+
+-- Drop the users table
+DROP TABLE users;

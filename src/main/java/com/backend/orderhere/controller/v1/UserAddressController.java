@@ -28,7 +28,7 @@ public class UserAddressController {
 
   @GetMapping("/all/{userId}")
   @ResponseStatus(HttpStatus.OK)
-  public List<UserAddressGetDto> getByUserId(@PathVariable Integer userId) {
+  public List<UserAddressGetDto> getByUserId(@PathVariable String userId) {
     return userAddressService.getUserAddressByUserId(userId);
   }
 

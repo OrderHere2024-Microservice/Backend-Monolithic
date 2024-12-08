@@ -11,7 +11,6 @@ import org.mapstruct.ReportingPolicy;
 public interface RatingMapper {
   Rating ratingPostDtoToRating(RatingPostDto ratingPostDto);
 
-  @Mapping(source = "user.userId", target = "userId")
   @Mapping(source = "dish.dishId", target = "dishId")
   RatingGetDto ratingToRatingGetDto(Rating rating);
 

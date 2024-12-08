@@ -23,9 +23,8 @@ public class Booking {
   @Column(name = "booking_id", nullable = false)
   private Integer bookingId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+  @Column(name = "user_id", nullable = false)
+  private String userId;
 
   @Column(name = "table_number", nullable = false)
   private Integer tableNumber;

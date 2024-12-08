@@ -30,7 +30,7 @@ public class UserAddressService {
     return userAddressMapper.UserAddressToUserAddressGetDto(userAddress);
   }
 
-  public List<UserAddressGetDto> getUserAddressByUserId(Integer userId) {
+  public List<UserAddressGetDto> getUserAddressByUserId(String userId) {
     List<UserAddress> userAddresses = userAddressRepository.findAllByUserId(userId);
     return userAddresses.stream()
         .map(userAddressMapper::UserAddressToUserAddressGetDto)
@@ -73,7 +73,7 @@ public class UserAddressService {
 
 
   @Transactional
-  public void ensureLatestUpdatedAddressIsDefaultForUser(Integer userId) {
+  public void ensureLatestUpdatedAddressIsDefaultForUser(String userId) {
     Long defaultAddressesCount = userAddressRepository.countDefaultAddressesForUser(userId);
 
     if (defaultAddressesCount == 0) {
