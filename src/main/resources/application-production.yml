@@ -6,6 +6,8 @@ spring:
       - aws-parameterstore:/config/orderhere-monolithic/production/spring/datasource?prefix=spring.datasource.
       - aws-parameterstore:/config/orderhere-monolithic/production/spring/storage?prefix=storage
       - aws-secretsmanager:rds!db-7ed282e1-e690-4835-a2ad-b154dd513b03?prefix=spring.datasource.
+      - aws-parameterstore:/config/orderhere-monolithic/production/spring/security?prefix=spring.security.
+      - aws-parameterstore:/config/orderhere-monolithic/production/keyCloak?prefix=keyCloak
   cloud:
     aws:
       region:
