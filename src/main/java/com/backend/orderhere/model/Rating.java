@@ -24,9 +24,8 @@ public class Rating {
   @Column(name = "rating_id", nullable = false, unique = true)
   private Integer ratingId;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+  @Column(name = "user_id", nullable = false)
+  private String userId;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "dish_id", nullable = false)

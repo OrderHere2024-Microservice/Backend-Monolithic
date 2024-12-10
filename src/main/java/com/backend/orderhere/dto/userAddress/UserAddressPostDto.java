@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserAddressPostDto {
-  private Integer userId;
+  private String userId;
   private String address;
   private Boolean isDefault;
 }

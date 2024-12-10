@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 public class UserAddressGetDto {
   private Integer userAddressId;
-  private Integer userId;
+  private String userId;
   private String address;
   private Boolean isDefault;
   private ZonedDateTime createdTime;

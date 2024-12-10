@@ -19,7 +19,7 @@ public interface RatingRepository extends JpaRepository<Rating, Integer> {
 
   List<Rating> findAllByDishDishId(Integer dishId);
 
-  List<Rating> findAllByUserUserId(Integer userId);
+  List<Rating> findAllByUserId(String userId);
 
   void deleteByRatingId(Integer ratingId);
 }

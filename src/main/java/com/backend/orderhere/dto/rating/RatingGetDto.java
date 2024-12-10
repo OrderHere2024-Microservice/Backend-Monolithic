@@ -14,7 +14,7 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 public class RatingGetDto {
   private Integer ratingId;
-  private Integer userId;
+  private String userId;
   private Integer dishId;
   private BigDecimal ratingValue;
   private String comments;

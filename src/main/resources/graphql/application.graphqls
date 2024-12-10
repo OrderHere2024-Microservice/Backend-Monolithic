@@ -115,7 +115,7 @@ type PaymentCreateDto {
 type Order {
     orderId: Int
     restaurantId: Int
-    userId: Int
+    userId: String
     dishes: [OrderDish]
     username: String
     orderStatus: String
