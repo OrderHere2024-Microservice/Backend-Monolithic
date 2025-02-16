@@ -19,8 +19,4 @@ public class StaticConfig {
             "/v1/public/category/**",
             "/health-check",
     };
-
-    // JWT
-    public final static String JwtPrefix = "Bearer ";
-    public final static String JwtSecretKey = "Xh8wJZcPZfa7t2WdKr4zr9TnRfWP8xYhV1a8dYkHfTw=";
 }
