@@ -1,12 +1,10 @@
 package com.backend.orderhere.controller.v1;
 
 import com.backend.orderhere.controller.v2.OrderGraphQLController;
-import com.backend.orderhere.dto.ingredient.DeleteIngredientDTO;
 import com.backend.orderhere.dto.order.DeleteOrderDTO;
 import com.backend.orderhere.dto.order.OrderGetDTO;
 import com.backend.orderhere.dto.order.PlaceOrderDTO;
 import com.backend.orderhere.dto.order.UpdateOrderStatusDTO;
-import com.backend.orderhere.model.Order;
 import com.backend.orderhere.model.enums.OrderStatus;
 import com.backend.orderhere.model.enums.OrderType;
 import com.backend.orderhere.service.OrderService;

@@ -1,8 +1,10 @@
 package com.backend.orderhere.model;
 
+import com.backend.orderhere.dto.OrderDishDTO;
 import com.backend.orderhere.model.enums.OrderStatus;
 import com.backend.orderhere.model.enums.OrderType;
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,6 +13,7 @@ import org.hibernate.annotations.*;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -69,6 +72,10 @@ public class Order {
   @CreationTimestamp
   @Column(name = "created_time", nullable = false)
   private ZonedDateTime createdTime;
+
+  @Type(JsonBinaryType.class)
+  @Column(name = "order_dishes", columnDefinition = "jsonb", nullable = false)
+  private List<OrderDishDTO> orderDishes;
 
   @UpdateTimestamp
   @Column(name = "updated_time", nullable = false)
