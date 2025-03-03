@@ -15,6 +15,8 @@ import com.backend.orderhere.model.*;
 import com.backend.orderhere.model.enums.OrderStatus;
 import com.backend.orderhere.model.enums.OrderType;
 import com.backend.orderhere.repository.*;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -28,18 +30,16 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
-    private final LinkOrderDishRepository linkOrderDishRepository;
-    private final DishRepository dishRepository;
+    private final ObjectMapper objectMapper;
     private final RestaurantRepository restaurantRepository;
     private final PaymentRepository paymentRepository;
     private final KeyCloakService keyCloakService;
     private final JwtUtil jwtUtil;
 
 
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, LinkOrderDishRepository linkOrderRepository, DishRepository dishRepository, RestaurantRepository restaurantRepository, PaymentRepository paymentRepository, KeyCloakService keyCloakService, JwtUtil jwtUtil) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, ObjectMapper objectMapper, RestaurantRepository restaurantRepository, PaymentRepository paymentRepository, KeyCloakService keyCloakService, JwtUtil jwtUtil) {
         this.orderRepository = orderRepository;
-        this.linkOrderDishRepository = linkOrderRepository;
-        this.dishRepository = dishRepository;
+        this.objectMapper = objectMapper;
         this.orderMapper = orderMapper;
         this.restaurantRepository = restaurantRepository;
         this.paymentRepository = paymentRepository;
@@ -47,19 +47,21 @@ public class OrderService {
         this.jwtUtil = jwtUtil;
     }
 
+    private List<OrderDishDTO> deserializeOrderDishes(List<OrderDishDTO> orderDishesJson) {
+        try {
+            // If JSON is already deserialized, return as-is
+            if (orderDishesJson == null) return List.of();
+            return objectMapper.convertValue(orderDishesJson, new TypeReference<List<OrderDishDTO>>() {});
+        } catch (Exception e) {
+            throw new RuntimeException("Error deserializing order dishes", e);
+        }
+    }
+
     public List<OrderGetDTO> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
         return orders.stream().map(order -> {
             OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
-            List<LinkOrderDish> linkOrderDishes = linkOrderDishRepository.findByOrderOrderId(order.getOrderId());
-            List<OrderDishDTO> dishDTOs = linkOrderDishes.stream().map(link -> {
-                OrderDishDTO dishDTO = new OrderDishDTO();
-                dishDTO.setDishId(link.getDish().getDishId());
-                dishDTO.setDishName(link.getDish().getDishName());
-                dishDTO.setDishPrice(link.getDish().getPrice());
-                dishDTO.setDishQuantity(link.getDishQuantity());
-                return dishDTO;
-            }).collect(Collectors.toList());
+            List<OrderDishDTO> dishDTOs = deserializeOrderDishes(order.getOrderDishes());
             orderDTO.setDishes(dishDTOs);
             return orderDTO;
         }).collect(Collectors.toList());
@@ -68,16 +70,9 @@ public class OrderService {
     public OrderGetDTO getOrderById(Integer orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
         OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
-        List<LinkOrderDish> linkOrderDishes = linkOrderDishRepository.findByOrderOrderId(order.getOrderId());
-        List<OrderDishDTO> dishDTOs = linkOrderDishes.stream().map(link -> {
-            OrderDishDTO dishDTO = new OrderDishDTO();
-            dishDTO.setDishId(link.getDish().getDishId());
-            dishDTO.setDishName(link.getDish().getDishName());
-            dishDTO.setDishPrice(link.getDish().getPrice());
-            dishDTO.setDishQuantity(link.getDishQuantity());
-            return dishDTO;
-        }).collect(Collectors.toList());
+        List<OrderDishDTO> dishDTOs = deserializeOrderDishes(order.getOrderDishes());
         orderDTO.setDishes(dishDTOs);
+
         return orderDTO;
     }
 
@@ -87,15 +82,7 @@ public class OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("No orders found for the user"));
         return orders.stream().map(order -> {
             OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
-            List<LinkOrderDish> linkOrderDishes = linkOrderDishRepository.findByOrderOrderId(order.getOrderId());
-            List<OrderDishDTO> dishDTOs = linkOrderDishes.stream().map(link -> {
-                OrderDishDTO dishDTO = new OrderDishDTO();
-                dishDTO.setDishId(link.getDish().getDishId());
-                dishDTO.setDishName(link.getDish().getDishName());
-                dishDTO.setDishPrice(link.getDish().getPrice());
-                dishDTO.setDishQuantity(link.getDishQuantity());
-                return dishDTO;
-            }).collect(Collectors.toList());
+            List<OrderDishDTO> dishDTOs = deserializeOrderDishes(order.getOrderDishes());
             orderDTO.setDishes(dishDTOs);
             return orderDTO;
         }).collect(Collectors.toList());
@@ -105,15 +92,7 @@ public class OrderService {
         List<Order> orders = orderRepository.findByOrderStatus(orderStatus);
         return orders.stream().map(order -> {
             OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
-            List<LinkOrderDish> linkOrderDishes = linkOrderDishRepository.findByOrderOrderId(order.getOrderId());
-            List<OrderDishDTO> dishDTOs = linkOrderDishes.stream().map(link -> {
-                OrderDishDTO dishDTO = new OrderDishDTO();
-                dishDTO.setDishId(link.getDish().getDishId());
-                dishDTO.setDishName(link.getDish().getDishName());
-                dishDTO.setDishPrice(link.getDish().getPrice());
-                dishDTO.setDishQuantity(link.getDishQuantity());
-                return dishDTO;
-            }).collect(Collectors.toList());
+            List<OrderDishDTO> dishDTOs = deserializeOrderDishes(order.getOrderDishes());
             orderDTO.setDishes(dishDTOs);
             return orderDTO;
         }).collect(Collectors.toList());
@@ -123,15 +102,7 @@ public class OrderService {
         List<Order> orders = orderRepository.findByOrderType(orderType);
         return orders.stream().map(order -> {
             OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
-            List<LinkOrderDish> linkOrderDishes = linkOrderDishRepository.findByOrderOrderId(order.getOrderId());
-            List<OrderDishDTO> dishDTOs = linkOrderDishes.stream().map(link -> {
-                OrderDishDTO dishDTO = new OrderDishDTO();
-                dishDTO.setDishId(link.getDish().getDishId());
-                dishDTO.setDishName(link.getDish().getDishName());
-                dishDTO.setDishPrice(link.getDish().getPrice());
-                dishDTO.setDishQuantity(link.getDishQuantity());
-                return dishDTO;
-            }).collect(Collectors.toList());
+            List<OrderDishDTO> dishDTOs = deserializeOrderDishes(order.getOrderDishes());
             orderDTO.setDishes(dishDTOs);
             return orderDTO;
         }).collect(Collectors.toList());
@@ -147,16 +118,6 @@ public class OrderService {
         return orderMapper.fromOrdertoUpdateOrderStatusDTO(order);
     }
 
-    private UserSignUpRequestDTO createAnonymousUserSignUpRequest() {
-        UserSignUpRequestDTO userSignUpRequestDTO = new UserSignUpRequestDTO();
-        userSignUpRequestDTO.setUserName("anonymous" + System.currentTimeMillis());
-        userSignUpRequestDTO.setFirstName("Anonymous");
-        userSignUpRequestDTO.setLastName("User");
-        userSignUpRequestDTO.setEmail("anonymous" + System.currentTimeMillis() + "@example.com");
-        userSignUpRequestDTO.setPassword("defaultPassword");
-        return userSignUpRequestDTO;
-    }
-
     public Order PlaceOrder(String token, PlaceOrderDTO placeOrderDTO) {
         String userId = (token != null) ? jwtUtil.getUserIdFromToken(token) : null;
         Order order = orderMapper.dtoToOrder(placeOrderDTO);
@@ -164,17 +125,9 @@ public class OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found with ID: " + placeOrderDTO.getRestaurantId()));
         order.setUserId(userId);
         order.setRestaurant(restaurant);
+        List<OrderDishDTO> dishDTOs = placeOrderDTO.getDishes();
+        order.setOrderDishes(dishDTOs);
         order = orderRepository.save(order);
-        List<LinkOrderDish> links = new ArrayList<LinkOrderDish>();
-        for (OrderDishDTO orderDishDTO : placeOrderDTO.getDishes()) {
-            LinkOrderDish link = new LinkOrderDish();
-            link.setOrder(order);
-            Dish dish = dishRepository.findById(orderDishDTO.getDishId()).orElseThrow(() -> new RuntimeException("Dish not found with ID" + orderDishDTO.getDishId()));
-            link.setDish(dish);
-            link.setDishQuantity(orderDishDTO.getDishQuantity());
-            links.add(link);
-        }
-        linkOrderDishRepository.saveAll(links);
         return order;
     }
 
@@ -183,7 +136,6 @@ public class OrderService {
         int orderId = deleteOrderDTO.getOrderId();
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
-        linkOrderDishRepository.deleteByOrderOrderId(orderId);
         List<Payment> payments = paymentRepository.getByOrderOrderId(orderId);
         paymentRepository.deleteAll(payments);
         orderRepository.delete(order);

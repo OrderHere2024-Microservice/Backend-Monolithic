@@ -10,4 +10,5 @@ public class OrderDishDTO {
   private String dishName;
   private Integer dishQuantity;
   private BigDecimal dishPrice;
+  private Boolean isDeleted = false;
 }
