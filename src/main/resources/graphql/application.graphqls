@@ -135,6 +135,7 @@ type OrderDish {
     dishName: String!
     dishQuantity: Int!
     dishPrice: BigDecimal!
+    isDeleted: Boolean
 }
 
 input OrderDishInput {

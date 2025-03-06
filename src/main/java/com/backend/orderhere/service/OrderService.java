@@ -140,4 +140,24 @@ public class OrderService {
         paymentRepository.deleteAll(payments);
         orderRepository.delete(order);
     }
+
+    @Transactional
+    public void markDishAsDeleted(Integer dishId) {
+        List<Order> orders = orderRepository.findAll();
+
+        for (Order order : orders) {
+            List<OrderDishDTO> updatedDishes = order.getOrderDishes().stream()
+                    .map(dish -> {
+                        if (dish.getDishId().equals(dishId)) {
+                            dish.setIsDeleted(true);
+                        }
+                        return dish;
+                    })
+                    .collect(Collectors.toList());
+
+            order.setOrderDishes(updatedDishes);
+            orderRepository.save(order);
+        }
+    }
+
 }
