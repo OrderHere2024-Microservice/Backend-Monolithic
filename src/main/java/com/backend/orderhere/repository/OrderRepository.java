@@ -10,11 +10,13 @@ import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
-  List<Order> findByOrderStatus(OrderStatus orderStatus);
+  List<Order> findByOrderStatusAndIsDeletedFalse(OrderStatus orderStatus);
 
-  List<Order> findByOrderType(OrderType orderType);
+  List<Order> findByOrderTypeAndIsDeletedFalse(OrderType orderType);
 
-  Optional<List<Order>> findByUserId(String userId);
+  Optional<List<Order>> findByUserIdAndIsDeletedFalse(String userId);
 
   Order findByOrderId(Integer orderId);
+
+  List<Order> findAllByIsDeletedFalse();
 }

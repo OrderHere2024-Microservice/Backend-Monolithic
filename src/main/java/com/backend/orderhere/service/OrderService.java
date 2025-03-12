@@ -56,7 +56,7 @@ public class OrderService {
     }
 
     public List<OrderGetDTO> getAllOrders() {
-        List<Order> orders = orderRepository.findAll();
+        List<Order> orders = orderRepository.findAllByIsDeletedFalse();
         return orders.stream().map(order -> {
             OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
             List<OrderDishDTO> dishDTOs = deserializeOrderDishes(order.getOrderDishes());
@@ -76,7 +76,7 @@ public class OrderService {
 
     public List<OrderGetDTO> getOrderByUserId(String token) {
         String userId = (token != null) ? jwtUtil.getUserIdFromToken(token) : null;
-        List<Order> orders = orderRepository.findByUserId(userId)
+        List<Order> orders = orderRepository.findByUserIdAndIsDeletedFalse(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("No orders found for the user"));
         return orders.stream().map(order -> {
             OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
@@ -87,7 +87,7 @@ public class OrderService {
     }
 
     public List<OrderGetDTO> getOrderByOrderStatus(OrderStatus orderStatus) {
-        List<Order> orders = orderRepository.findByOrderStatus(orderStatus);
+        List<Order> orders = orderRepository.findByOrderStatusAndIsDeletedFalse(orderStatus);
         return orders.stream().map(order -> {
             OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
             List<OrderDishDTO> dishDTOs = deserializeOrderDishes(order.getOrderDishes());
@@ -97,7 +97,7 @@ public class OrderService {
     }
 
     public List<OrderGetDTO> getOrderByOrderType(OrderType orderType) {
-        List<Order> orders = orderRepository.findByOrderType(orderType);
+        List<Order> orders = orderRepository.findByOrderTypeAndIsDeletedFalse(orderType);
         return orders.stream().map(order -> {
             OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
             List<OrderDishDTO> dishDTOs = deserializeOrderDishes(order.getOrderDishes());
@@ -134,14 +134,8 @@ public class OrderService {
         int orderId = deleteOrderDTO.getOrderId();
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
-
-        /*
-        *
-        * Should soft delete the order instead of hard delete
-        *
-        * */
-
-        orderRepository.delete(order);
+        order.setIsDeleted(true);
+        orderRepository.save(order);
     }
 
     @Transactional

@@ -80,4 +80,7 @@ public class Order {
   @UpdateTimestamp
   @Column(name = "updated_time", nullable = false)
   private ZonedDateTime updatedTime;
+
+  @Column(name = "is_deleted", nullable = false)
+  private Boolean isDeleted;
 }
