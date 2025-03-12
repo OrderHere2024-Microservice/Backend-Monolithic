@@ -32,17 +32,15 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final ObjectMapper objectMapper;
     private final RestaurantRepository restaurantRepository;
-    private final PaymentRepository paymentRepository;
     private final KeyCloakService keyCloakService;
     private final JwtUtil jwtUtil;
 
 
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, ObjectMapper objectMapper, RestaurantRepository restaurantRepository, PaymentRepository paymentRepository, KeyCloakService keyCloakService, JwtUtil jwtUtil) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, ObjectMapper objectMapper, RestaurantRepository restaurantRepository, KeyCloakService keyCloakService, JwtUtil jwtUtil) {
         this.orderRepository = orderRepository;
         this.objectMapper = objectMapper;
         this.orderMapper = orderMapper;
         this.restaurantRepository = restaurantRepository;
-        this.paymentRepository = paymentRepository;
         this.keyCloakService = keyCloakService;
         this.jwtUtil = jwtUtil;
     }
@@ -136,8 +134,13 @@ public class OrderService {
         int orderId = deleteOrderDTO.getOrderId();
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
-        List<Payment> payments = paymentRepository.getByOrderOrderId(orderId);
-        paymentRepository.deleteAll(payments);
+
+        /*
+        *
+        * Should soft delete the order instead of hard delete
+        *
+        * */
+
         orderRepository.delete(order);
     }
 
