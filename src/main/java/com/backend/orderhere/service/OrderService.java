@@ -7,20 +7,18 @@ import com.backend.orderhere.dto.order.DeleteOrderDTO;
 import com.backend.orderhere.dto.order.OrderGetDTO;
 import com.backend.orderhere.dto.order.PlaceOrderDTO;
 import com.backend.orderhere.dto.order.UpdateOrderStatusDTO;
-import com.backend.orderhere.dto.user.UserSignUpRequestDTO;
 import com.backend.orderhere.exception.ResourceNotFoundException;
 import com.backend.orderhere.auth.JwtUtil;
 import com.backend.orderhere.mapper.OrderMapper;
 import com.backend.orderhere.model.*;
-import com.backend.orderhere.model.enums.OrderStatus;
-import com.backend.orderhere.model.enums.OrderType;
+import com.backend.orderhere.enums.OrderStatus;
+import com.backend.orderhere.enums.OrderType;
 import com.backend.orderhere.repository.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,17 +30,15 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final ObjectMapper objectMapper;
     private final RestaurantRepository restaurantRepository;
-    private final PaymentRepository paymentRepository;
     private final KeyCloakService keyCloakService;
     private final JwtUtil jwtUtil;
 
 
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, ObjectMapper objectMapper, RestaurantRepository restaurantRepository, PaymentRepository paymentRepository, KeyCloakService keyCloakService, JwtUtil jwtUtil) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, ObjectMapper objectMapper, RestaurantRepository restaurantRepository, KeyCloakService keyCloakService, JwtUtil jwtUtil) {
         this.orderRepository = orderRepository;
         this.objectMapper = objectMapper;
         this.orderMapper = orderMapper;
         this.restaurantRepository = restaurantRepository;
-        this.paymentRepository = paymentRepository;
         this.keyCloakService = keyCloakService;
         this.jwtUtil = jwtUtil;
     }
@@ -58,7 +54,7 @@ public class OrderService {
     }
 
     public List<OrderGetDTO> getAllOrders() {
-        List<Order> orders = orderRepository.findAll();
+        List<Order> orders = orderRepository.findAllByIsDeletedFalse();
         return orders.stream().map(order -> {
             OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
             List<OrderDishDTO> dishDTOs = deserializeOrderDishes(order.getOrderDishes());
@@ -78,7 +74,7 @@ public class OrderService {
 
     public List<OrderGetDTO> getOrderByUserId(String token) {
         String userId = (token != null) ? jwtUtil.getUserIdFromToken(token) : null;
-        List<Order> orders = orderRepository.findByUserId(userId)
+        List<Order> orders = orderRepository.findByUserIdAndIsDeletedFalse(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("No orders found for the user"));
         return orders.stream().map(order -> {
             OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
@@ -89,7 +85,7 @@ public class OrderService {
     }
 
     public List<OrderGetDTO> getOrderByOrderStatus(OrderStatus orderStatus) {
-        List<Order> orders = orderRepository.findByOrderStatus(orderStatus);
+        List<Order> orders = orderRepository.findByOrderStatusAndIsDeletedFalse(orderStatus);
         return orders.stream().map(order -> {
             OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
             List<OrderDishDTO> dishDTOs = deserializeOrderDishes(order.getOrderDishes());
@@ -99,7 +95,7 @@ public class OrderService {
     }
 
     public List<OrderGetDTO> getOrderByOrderType(OrderType orderType) {
-        List<Order> orders = orderRepository.findByOrderType(orderType);
+        List<Order> orders = orderRepository.findByOrderTypeAndIsDeletedFalse(orderType);
         return orders.stream().map(order -> {
             OrderGetDTO orderDTO = orderMapper.fromOrderToOrderGetDTO(order, keyCloakService);
             List<OrderDishDTO> dishDTOs = deserializeOrderDishes(order.getOrderDishes());
@@ -136,9 +132,16 @@ public class OrderService {
         int orderId = deleteOrderDTO.getOrderId();
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
-        List<Payment> payments = paymentRepository.getByOrderOrderId(orderId);
-        paymentRepository.deleteAll(payments);
-        orderRepository.delete(order);
+        order.setIsDeleted(true);
+        orderRepository.save(order);
+    }
+
+    @Transactional
+    public void markOrderStatusAsPreparing(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
+        order.setOrderStatus(OrderStatus.preparing);
+        orderRepository.save(order);
     }
 
     @Transactional

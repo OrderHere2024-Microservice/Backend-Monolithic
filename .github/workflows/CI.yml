@@ -6,10 +6,6 @@ on:
   push:
     branches: [ "dev" ]
   workflow_call:
-    secrets:
-      STRIPE_API_KEY:
-        required: true
-        description: ''
   workflow_dispatch:
 
 jobs:
@@ -27,7 +23,5 @@ jobs:
         cache: maven
     - name: Set up Docker
       run: docker compose -f docker-compose.local.yaml up -d
-    - name: Set STRIPE_API_KEY environment variable
-      run: echo "STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}" >> $GITHUB_ENV
     - name: Build with Maven
       run: mvn -B package --file pom.xml

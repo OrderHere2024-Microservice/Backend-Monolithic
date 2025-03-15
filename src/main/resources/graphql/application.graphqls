@@ -6,39 +6,18 @@ type Query {
     getAllRestaurants: [Restaurant]
     getRestaurantById(restaurantId: Int!): Restaurant
 
-    getCategories(restaurantId: Int!): [Category]
-
     getAllOrders: [Order]
     getOrderById(orderId: Int!): Order
     getUserOrders: [Order]
-
-    findIngredientsByDishID(dishID: Int!): [GetIngredientDTO]
-    getIngredientById(id: Int!): Ingredient
-
-    getDishes(restaurantId: Int!, page: Int = 1, size: Int = 10, sort: String = "category", order: String = "asc"): DishPage
-    getDishesByCategory(restaurantId: Int!, categoryId: Int!): [DishGetDto]
 }
 
 type Mutation {
     createRestaurant(restaurantCreateDTO: RestaurantInput!): Restaurant
     updateRestaurantById(restaurantId: Int!, restaurantUpdateDTO: RestaurantInput!): Restaurant
 
-    createCategory(categoryPostDTO: CategoryInput!): Category
-    createPayment(paymentPostDto: PaymentPostDtoInput!): PaymentCreateDto!
-
-    getPaymentResult(paymentResultDto: PaymentResultDtoInput!): String!
-
     placeOrder(placeOrderDTO: PlaceOrderInput!): Int!
     updateOrderStatus(updateOrderStatusDTO: UpdateOrderStatusInput!): Order!
     deleteOrder(deleteOrderDTO: DeleteOrderInput!): String!
-
-    createLinkIngredientDish(postIngredientDTO: PostIngredientInput!): Int!
-    deleteIngredientLink(deleteIngredientDTO: DeleteIngredientInput!): String!
-    updateIngredient(updateIngredientDTO: UpdateIngredientInput!): Ingredient!
-
-    createDish(dishCreateDto: DishCreateInput!): Boolean
-    updateDish(dishUpdateDto: DishUpdateInput!): DishGetDto
-    deleteDish(dishId: Int!): Boolean
 }
 
 type Restaurant {
@@ -81,35 +60,6 @@ type OpeningHour {
     dayOfWeek: String!
     openingTime: String!
     closingTime: String!
-}
-
-type Category {
-    categoryId: Int
-    restaurantId: Int!
-    categoryName: String!
-    createdTime: String
-    updatedTime: String
-}
-
-input CategoryInput {
-    restaurantId: Int!
-    categoryName: String!
-}
-
-input PaymentPostDtoInput {
-    orderId: Int!
-    amount: BigDecimal!
-    currency: String!
-}
-
-input PaymentResultDtoInput {
-    paymentId: String!
-    result: String!
-}
-
-type PaymentCreateDto {
-    paymentId: Int!
-    clientSecret: String!
 }
 
 type Order {
@@ -183,76 +133,4 @@ enum OrderStatus {
     in_transit
     delivered
     delayed
-}
-
-type Ingredient {
-    ingredientId: Int!
-    name: String!
-}
-
-type GetIngredientDTO {
-    linkIngredientDishId: Int!
-    dishId: Int!
-    ingredientId: Int!
-    quantityValue: BigDecimal!
-    quantityUnit: String!
-}
-
-input PostIngredientInput {
-    dishId: Int!
-    name: String!
-    unit: String!
-    quantityValue: BigDecimal!
-}
-
-input UpdateIngredientInput {
-    ingredientId: Int!
-    name: String!
-}
-
-input DeleteIngredientInput {
-    dishId: Int!
-    ingredientId: Int!
-}
-
-type DishPage {
-    data: [DishGetDto]
-    totalItems: Long
-    totalPages: Int
-    currentPage: Int
-}
-
-type DishGetDto {
-    dishId: Int
-    dishName: String
-    description: String
-    price: BigDecimal
-    imageUrl: String
-    rating: BigDecimal
-    restaurantId: Int
-    availability: Boolean
-    categoryId: Int
-    categoryName: String
-}
-
-input DishCreateInput {
-    dishName: String!
-    description: String!
-    price: BigDecimal!
-    imageUrl: String
-    imageFile: Upload
-    restaurantId: Int!
-    availability: Boolean!
-    categoryId: Int!
-}
-
-input DishUpdateInput {
-    dishId: Int!
-    dishName: String!
-    description: String!
-    price: BigDecimal!
-    imageUrl: String
-    imageFile: Upload
-    restaurantId: Int!
-    availability: Boolean!
 }
