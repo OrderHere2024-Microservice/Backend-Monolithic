@@ -1,8 +1,8 @@
 package com.backend.orderhere.repository;
 
 import com.backend.orderhere.model.Order;
-import com.backend.orderhere.model.enums.OrderStatus;
-import com.backend.orderhere.model.enums.OrderType;
+import com.backend.orderhere.enums.OrderStatus;
+import com.backend.orderhere.enums.OrderType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

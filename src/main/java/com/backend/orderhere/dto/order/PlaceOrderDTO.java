@@ -1,10 +1,8 @@
 package com.backend.orderhere.dto.order;
 
 import com.backend.orderhere.dto.OrderDishDTO;
-import com.backend.orderhere.model.enums.OrderStatus;
-import com.backend.orderhere.model.enums.OrderType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.backend.orderhere.enums.OrderStatus;
+import com.backend.orderhere.enums.OrderType;
 import lombok.Data;
 
 import java.math.BigDecimal;

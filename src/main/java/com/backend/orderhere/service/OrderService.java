@@ -7,20 +7,18 @@ import com.backend.orderhere.dto.order.DeleteOrderDTO;
 import com.backend.orderhere.dto.order.OrderGetDTO;
 import com.backend.orderhere.dto.order.PlaceOrderDTO;
 import com.backend.orderhere.dto.order.UpdateOrderStatusDTO;
-import com.backend.orderhere.dto.user.UserSignUpRequestDTO;
 import com.backend.orderhere.exception.ResourceNotFoundException;
 import com.backend.orderhere.auth.JwtUtil;
 import com.backend.orderhere.mapper.OrderMapper;
 import com.backend.orderhere.model.*;
-import com.backend.orderhere.model.enums.OrderStatus;
-import com.backend.orderhere.model.enums.OrderType;
+import com.backend.orderhere.enums.OrderStatus;
+import com.backend.orderhere.enums.OrderType;
 import com.backend.orderhere.repository.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -135,6 +133,14 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
         order.setIsDeleted(true);
+        orderRepository.save(order);
+    }
+
+    @Transactional
+    public void markOrderStatusAsPreparing(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
+        order.setOrderStatus(OrderStatus.preparing);
         orderRepository.save(order);
     }
 

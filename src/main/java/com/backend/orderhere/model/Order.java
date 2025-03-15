@@ -1,8 +1,8 @@
 package com.backend.orderhere.model;
 
 import com.backend.orderhere.dto.OrderDishDTO;
-import com.backend.orderhere.model.enums.OrderStatus;
-import com.backend.orderhere.model.enums.OrderType;
+import com.backend.orderhere.enums.OrderStatus;
+import com.backend.orderhere.enums.OrderType;
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Table;
