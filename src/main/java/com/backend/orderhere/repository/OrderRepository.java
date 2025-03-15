@@ -1,8 +1,8 @@
 package com.backend.orderhere.repository;
 
 import com.backend.orderhere.model.Order;
-import com.backend.orderhere.model.enums.OrderStatus;
-import com.backend.orderhere.model.enums.OrderType;
+import com.backend.orderhere.enums.OrderStatus;
+import com.backend.orderhere.enums.OrderType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,11 +10,13 @@ import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
-  List<Order> findByOrderStatus(OrderStatus orderStatus);
+  List<Order> findByOrderStatusAndIsDeletedFalse(OrderStatus orderStatus);
 
-  List<Order> findByOrderType(OrderType orderType);
+  List<Order> findByOrderTypeAndIsDeletedFalse(OrderType orderType);
 
-  Optional<List<Order>> findByUserId(String userId);
+  Optional<List<Order>> findByUserIdAndIsDeletedFalse(String userId);
 
   Order findByOrderId(Integer orderId);
+
+  List<Order> findAllByIsDeletedFalse();
 }

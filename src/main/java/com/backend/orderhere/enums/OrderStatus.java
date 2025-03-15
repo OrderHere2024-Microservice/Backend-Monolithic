@@ -1,4 +1,4 @@
-package com.backend.orderhere.model.enums;
+package com.backend.orderhere.enums;
 
 public enum OrderStatus {
   pending, preparing, finished, cancelled, in_transit, delivered, delayed

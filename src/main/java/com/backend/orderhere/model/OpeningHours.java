@@ -1,6 +1,6 @@
 package com.backend.orderhere.model;
 
-import com.backend.orderhere.model.enums.Week;
+import com.backend.orderhere.enums.Week;
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import jakarta.persistence.Table;
 import jakarta.persistence.*;

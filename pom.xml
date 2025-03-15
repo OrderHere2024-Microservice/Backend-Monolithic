@@ -139,11 +139,6 @@
 			<artifactId>postgresql</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.stripe</groupId>
-			<artifactId>stripe-java</artifactId>
-			<version>20.103.0</version>
-		</dependency>
-		<dependency>
 			<groupId>io.hypersistence</groupId>
 			<artifactId>hypersistence-utils-hibernate-62</artifactId>
 			<version>3.8.2</version>
